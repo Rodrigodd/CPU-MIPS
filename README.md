@@ -18,6 +18,7 @@ simplificada de um processador MIPS.
 
 | Instruction name | Mnemonic | Format | 6 | 5  | 5  | 5  | 5  | 6  |
 | ---------------- | -------- | ------ | - | -- | -- | -- | -- | -- |
+| Multiplication   | MUL      | R      | 2 | rs | rt | rd | 10 | 50 |
 | Add              | ADD      | R      | 2 | rs | rt | rd | 10 | 32 |
 | Subtract         | SUB      | R      | 2 | rs | rt | rd | 10 | 34 |
 | And              | AND      | R      | 2 | rs | rt | rd | 10 | 36 |
