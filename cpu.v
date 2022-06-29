@@ -97,7 +97,6 @@ MUX C_SEL(
 );
 
 ALU ALU_(
-	clk, rst,
 	a_ex, c_ex,
 	op_sel,
 	op

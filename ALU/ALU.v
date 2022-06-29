@@ -1,8 +1,14 @@
 module ALU(
-	input clk, rst,
-	input [31:0] a, c_ex,
-	input [1:0] op_sel,
-	output [31:0] op
+	input [31:0] a, c,
+	input [1:0] op,
+	output [31:0] out
 );
+
+assign out = op == 0 ? a + c
+			: op == 1 ? a - c
+			: op == 2 ? a & c
+			: op == 3 ? a | c
+			: 0; // unrechable
+
 endmodule
 
