@@ -145,7 +145,7 @@ Register M_WB(
 
 Register CTRL_WB(
 	clk, rst,
-	ctrl_mem, ctrl_wb
+	_ctrl_wb, ctrl_wb
 );
 
 /// Write Back
