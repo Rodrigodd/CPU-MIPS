@@ -1,4 +1,7 @@
-module cpu(
+module cpu #(
+	parameter CODE = "code.txt",
+	parameter DATA = "data.txt"
+) (
 	input clk, rst,
 	input data_bus_read,
 	output [31:0] addr, 
