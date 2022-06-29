@@ -29,11 +29,12 @@ wire [4:0] write_back_reg;
 wire [31:0] write_back;
 
 wire [4:0] a_reg, b_reg;
-wire [31:0] a_ex, b_ex, imm;
+wire [31:0] a_ex, b_ex;
+wire[31:0] _imm, imm;
 
 
-// { c_sel[1], d_sel[1], op_sel[2], wr_rd[1], write_back_en[1], write_back_reg }
-wire[10:0] ctrl_ex;
+// { c_sel[1], d_sel[1], op_sel[2], wr_rd[1], wb_sel[1], write_back_en[1], write_back_reg[5] }
+wire[11:0] _ctrl_ex, ctrl_ex;
 
 RegisterFile RF(
 	clk, rst,
@@ -45,13 +46,23 @@ RegisterFile RF(
 Control CTRL(
 	clk, rst,
 	instr,
-	a_reg, b_reg, ctrl_ex
+	a_reg, b_reg, _ctrl_ex
 );
 
 Extend EXT(
 	clk, rst,
 	instr,
-	imm
+	_imm
+);
+
+Register CTRL_EX(
+	clk, rst,
+	_ctrl_ex, ctrl_ex
+);
+
+Register IMM(
+	clk, rst,
+	_imm, imm
 );
 
 /// Execute
@@ -61,7 +72,7 @@ wire [31:0] mul, op, c_ex, d_ex, d_mem, b_mem;
 wire c_sel, d_sel;
 wire [1:0] op_sel;
 
-wire [6:0] _ctrl_mem, ctrl_mem;
+wire [7:0] _ctrl_mem, ctrl_mem;
 
 assign { c_sel, d_sel, op_sel, _ctrl_mem } = ctrl_ex;
 
@@ -109,7 +120,7 @@ Register CTRL_MEM(
 
 wire [31:0] c_mem, m_mem, _d_wb, d_wb, m_wb;
 
-wire [5:0] _ctrl_wb, ctrl_wb;
+wire [6:0] _ctrl_wb, ctrl_wb;
 
 assign { wr_rd, _ctrl_wb } = ctrl_mem;
 assign addr = d_mem;
@@ -152,7 +163,7 @@ Register CTRL_WB(
 
 wire wb_sel;
 
-assign { write_back_en, write_back_reg } = ctrl_wb;
+assign { wb_sel, write_back_en, write_back_reg } = ctrl_wb;
 
 MUX WB_SEL(
 	d_wb, m_wb,
