@@ -107,7 +107,7 @@ Register CTRL_MEM(
 
 /// Memory
 
-wire [31:0] c_mem, m_mem, d_wb, m_wb;
+wire [31:0] c_mem, m_mem, _d_wb, d_wb, m_wb;
 
 wire [5:0] _ctrl_wb, ctrl_wb;
 
@@ -130,12 +130,12 @@ DataMemory MEM(
 MUX D_WB_SEL(
 	c_mem, data_bus_read,
 	cs,
-	d_wb
+	_d_wb
 );
 
 Register D_WB(
 	clk, rst,
-	d_mem, d_wb
+	_d_wb, d_wb
 );
 
 Register M_WB(
