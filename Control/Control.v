@@ -1,5 +1,4 @@
 module Control(
-	input clk, rst,
 	input [31:0] instr,
 	output reg [4:0] a_reg, b_reg,
 	// { c_sel[1], d_sel[1], op_sel[2], wr_rd[1], wb_sel[1], write_back_en[1], write_back_reg[5] }

@@ -44,7 +44,6 @@ RegisterFile RF(
 );
 
 Control CTRL(
-	clk, rst,
 	instr,
 	a_reg, b_reg, _ctrl_ex
 );
@@ -172,4 +171,3 @@ MUX WB_SEL(
 );
 
 endmodule
-
