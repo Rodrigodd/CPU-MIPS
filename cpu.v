@@ -49,7 +49,6 @@ Control CTRL(
 );
 
 Extend EXT(
-	clk, rst,
 	instr,
 	_imm
 );
@@ -171,3 +170,4 @@ MUX WB_SEL(
 );
 
 endmodule
+
