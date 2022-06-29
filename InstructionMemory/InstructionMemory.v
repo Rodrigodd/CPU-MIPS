@@ -14,16 +14,14 @@ reg [DATA_WIDTH-1:0] rom[2**ADDR_WIDTH-1:0];
 
 integer i;
 
-initial
-begin
+initial begin
 	for (i = 0; i < 2**ADDR_WIDTH - 1; i = i + 1) begin
 		rom[i] = 0;
 	end
 	$readmemh(INITIAL, rom, 0);
 end
 
-always @ (posedge clk)
-begin
+always @ (posedge clk) begin
 	data <= rst ? 0 : rom[addr];
 end
 
