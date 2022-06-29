@@ -43,7 +43,7 @@ set_global_assignment -name ORIGINAL_QUARTUS_VERSION 18.1.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "21:04:55  JUNE 24, 2022"
 set_global_assignment -name LAST_QUARTUS_VERSION "18.1.0 Lite Edition"
 set_global_assignment -name VERILOG_FILE cpu.v
-set_global_assignment -name VERILOG_FILE cpu_TB.v
+set_global_assignment -name VERILOG_FILE TB.v
 set_global_assignment -name VERILOG_FILE DataMemory/DataMemory.v
 set_global_assignment -name VERILOG_FILE InstructionMemory/InstructionMemory.v
 set_global_assignment -name VERILOG_FILE PC/PC.v
@@ -59,4 +59,5 @@ set_global_assignment -name VERILOG_FILE PLL/PLL.v
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
