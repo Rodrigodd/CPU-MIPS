@@ -4,8 +4,11 @@ module RegisterFile(
 	input [4:0] write_back_reg, 
 	input [31:0] write_back,
 	input [4:0] a_reg, b_reg,
-	output reg [31:0] a, b
+	output [31:0] a, b
 );
+
+assign a = registers[a_reg];
+assign b = registers[b_reg];
 
 reg [31:0] registers [31:0];
 
@@ -19,8 +22,6 @@ always @(posedge clk or posedge rst) begin
 		end
 	end else begin
 		if (write_back_en) registers[write_back_reg] <= write_back;
-		a <= registers[a_reg];
-		b <= registers[b_reg];
 	end
 end
 

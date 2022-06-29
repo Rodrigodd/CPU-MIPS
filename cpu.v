@@ -29,9 +29,8 @@ wire [4:0] write_back_reg;
 wire [31:0] write_back;
 
 wire [4:0] a_reg, b_reg;
-wire [31:0] a_ex, b_ex;
+wire [31:0] _a_ex, a_ex, _b_ex, b_ex;
 wire[31:0] _imm, imm;
-
 
 // { c_sel[1], d_sel[1], op_sel[2], wr_rd[1], wb_sel[1], write_back_en[1], write_back_reg[5] }
 wire[11:0] _ctrl_ex, ctrl_ex;
@@ -40,7 +39,7 @@ RegisterFile RF(
 	clk, rst,
 	write_back_en, write_back_reg, write_back,
 	a_reg, b_reg,
-	a_ex, b_ex
+	_a_ex, _b_ex
 );
 
 Control CTRL(
@@ -53,6 +52,16 @@ Extend EXT(
 	_imm
 );
 
+Register A_EX(
+	clk, rst,
+	_a_ex, a_ex
+);
+
+Register B_EX(
+	clk, rst,
+	_b_ex, b_ex
+);
+
 Register CTRL_EX(
 	clk, rst,
 	_ctrl_ex, ctrl_ex
@@ -62,6 +71,7 @@ Register IMM(
 	clk, rst,
 	_imm, imm
 );
+
 
 /// Execute
 
