@@ -7,10 +7,10 @@ module RegisterFile(
 	output [31:0] a, b
 );
 
+reg [31:0] registers [31:0];
+
 assign a = registers[a_reg];
 assign b = registers[b_reg];
-
-reg [31:0] registers [31:0];
 
 integer i;
 
