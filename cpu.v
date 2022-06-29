@@ -134,7 +134,6 @@ assign addr = d_mem;
 assign data_bus_write = b_mem;
 
 ADDRDecoding DEC(
-	clk, rst,
 	addr,
 	cs
 );
