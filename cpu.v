@@ -65,7 +65,7 @@ Register B_EX(
 	_b_ex, b_ex
 );
 
-Register CTRL_EX(
+Register #(12) CTRL_EX(
 	clk, rst,
 	_ctrl_ex, ctrl_ex
 );
@@ -121,7 +121,7 @@ Register B_MEM(
 	b_ex, b_mem
 );
 
-Register CTRL_MEM(
+Register #(8) CTRL_MEM(
 	clk, rst,
 	_ctrl_mem, ctrl_mem
 );
@@ -163,7 +163,7 @@ Register M_WB(
 	m_mem, m_wb
 );
 
-Register CTRL_WB(
+Register #(7) CTRL_WB(
 	clk, rst,
 	_ctrl_wb, ctrl_wb
 );
