@@ -33,6 +33,92 @@
 //refer to the applicable agreement for further details.
 
 
+//altpll bandwidth_type="AUTO" clk0_divide_by=32 clk0_duty_cycle=50 clk0_multiply_by=1 clk0_phase_shift="0" compensate_clock="CLK0" device_family="Cyclone IV GX" inclk0_input_frequency=20000 intended_device_family="Cyclone IV GX" lpm_hint="CBX_MODULE_PREFIX=PLL" operation_mode="normal" pll_type="AUTO" port_clk0="PORT_USED" port_clk1="PORT_UNUSED" port_clk2="PORT_UNUSED" port_clk3="PORT_UNUSED" port_clk4="PORT_UNUSED" port_clk5="PORT_UNUSED" port_extclk0="PORT_UNUSED" port_extclk1="PORT_UNUSED" port_extclk2="PORT_UNUSED" port_extclk3="PORT_UNUSED" port_inclk1="PORT_UNUSED" port_phasecounterselect="PORT_UNUSED" port_phasedone="PORT_UNUSED" port_scandata="PORT_UNUSED" port_scandataout="PORT_UNUSED" self_reset_on_loss_lock="OFF" width_clock=5 areset clk inclk locked
+//VERSION_BEGIN 18.1 cbx_altclkbuf 2018:09:12:13:04:24:SJ cbx_altiobuf_bidir 2018:09:12:13:04:24:SJ cbx_altiobuf_in 2018:09:12:13:04:24:SJ cbx_altiobuf_out 2018:09:12:13:04:24:SJ cbx_altpll 2018:09:12:13:04:24:SJ cbx_cycloneii 2018:09:12:13:04:24:SJ cbx_lpm_add_sub 2018:09:12:13:04:24:SJ cbx_lpm_compare 2018:09:12:13:04:24:SJ cbx_lpm_counter 2018:09:12:13:04:24:SJ cbx_lpm_decode 2018:09:12:13:04:24:SJ cbx_lpm_mux 2018:09:12:13:04:24:SJ cbx_mgl 2018:09:12:13:10:36:SJ cbx_nadder 2018:09:12:13:04:24:SJ cbx_stratix 2018:09:12:13:04:24:SJ cbx_stratixii 2018:09:12:13:04:24:SJ cbx_stratixiii 2018:09:12:13:04:24:SJ cbx_stratixv 2018:09:12:13:04:24:SJ cbx_util_mgl 2018:09:12:13:04:24:SJ  VERSION_END
+// synthesis VERILOG_INPUT_VERSION VERILOG_2001
+// altera message_off 10463
+
+
+//synthesis_resources = cycloneiv_pll 1 
+//synopsys translate_off
+`timescale 1 ps / 1 ps
+//synopsys translate_on
+module  PLL_altpll
+	( 
+	areset,
+	clk,
+	inclk,
+	locked) /* synthesis synthesis_clearbox=1 */;
+	input   areset;
+	output   [4:0]  clk;
+	input   [1:0]  inclk;
+	output   locked;
+`ifndef ALTERA_RESERVED_QIS
+// synopsys translate_off
+`endif
+	tri0   areset;
+	tri0   [1:0]  inclk;
+`ifndef ALTERA_RESERVED_QIS
+// synopsys translate_on
+`endif
+
+	wire  [4:0]   wire_pll1_clk;
+	wire  wire_pll1_fbout;
+	wire  wire_pll1_locked;
+
+	cycloneiv_pll   pll1
+	( 
+	.activeclock(),
+	.areset(areset),
+	.clk(wire_pll1_clk),
+	.clkbad(),
+	.fbin(wire_pll1_fbout),
+	.fbout(wire_pll1_fbout),
+	.fref(),
+	.icdrclk(),
+	.inclk(inclk),
+	.locked(wire_pll1_locked),
+	.phasedone(),
+	.scandataout(),
+	.scandone(),
+	.vcooverrange(),
+	.vcounderrange()
+	`ifndef FORMAL_VERIFICATION
+	// synopsys translate_off
+	`endif
+	,
+	.clkswitch(1'b0),
+	.configupdate(1'b0),
+	.pfdena(1'b1),
+	.phasecounterselect({3{1'b0}}),
+	.phasestep(1'b0),
+	.phaseupdown(1'b0),
+	.scanclk(1'b0),
+	.scanclkena(1'b1),
+	.scandata(1'b0)
+	`ifndef FORMAL_VERIFICATION
+	// synopsys translate_on
+	`endif
+	);
+	defparam
+		pll1.bandwidth_type = "auto",
+		pll1.clk0_divide_by = 32,
+		pll1.clk0_duty_cycle = 50,
+		pll1.clk0_multiply_by = 1,
+		pll1.clk0_phase_shift = "0",
+		pll1.compensate_clock = "clk0",
+		pll1.inclk0_input_frequency = 20000,
+		pll1.operation_mode = "normal",
+		pll1.pll_type = "auto",
+		pll1.self_reset_on_loss_lock = "off",
+		pll1.lpm_type = "cycloneiv_pll";
+	assign
+		clk = {wire_pll1_clk[4:0]},
+		locked = wire_pll1_locked;
+endmodule //PLL_altpll
+//VALID FILE
+
+
 // synopsys translate_off
 `timescale 1 ps / 1 ps
 // synopsys translate_on
@@ -40,7 +126,7 @@ module PLL (
 	areset,
 	inclk0,
 	c0,
-	locked);
+	locked)/* synthesis synthesis_clearbox = 1 */;
 
 	input	  areset;
 	input	  inclk0;
@@ -63,101 +149,11 @@ module PLL (
 	wire  c0 = sub_wire4;
 	wire  locked = sub_wire5;
 
-	altpll	altpll_component (
+	PLL_altpll	PLL_altpll_component (
 				.areset (areset),
 				.inclk (sub_wire1),
 				.clk (sub_wire3),
-				.locked (sub_wire5),
-				.activeclock (),
-				.clkbad (),
-				.clkena ({6{1'b1}}),
-				.clkloss (),
-				.clkswitch (1'b0),
-				.configupdate (1'b0),
-				.enable0 (),
-				.enable1 (),
-				.extclk (),
-				.extclkena ({4{1'b1}}),
-				.fbin (1'b1),
-				.fbmimicbidir (),
-				.fbout (),
-				.fref (),
-				.icdrclk (),
-				.pfdena (1'b1),
-				.phasecounterselect ({4{1'b1}}),
-				.phasedone (),
-				.phasestep (1'b1),
-				.phaseupdown (1'b1),
-				.pllena (1'b1),
-				.scanaclr (1'b0),
-				.scanclk (1'b0),
-				.scanclkena (1'b1),
-				.scandata (1'b0),
-				.scandataout (),
-				.scandone (),
-				.scanread (1'b0),
-				.scanwrite (1'b0),
-				.sclkout0 (),
-				.sclkout1 (),
-				.vcooverrange (),
-				.vcounderrange ());
-	defparam
-		altpll_component.bandwidth_type = "AUTO",
-		altpll_component.clk0_divide_by = 32,
-		altpll_component.clk0_duty_cycle = 50,
-		altpll_component.clk0_multiply_by = 1,
-		altpll_component.clk0_phase_shift = "0",
-		altpll_component.compensate_clock = "CLK0",
-		altpll_component.inclk0_input_frequency = 20000,
-		altpll_component.intended_device_family = "Cyclone IV GX",
-		altpll_component.lpm_hint = "CBX_MODULE_PREFIX=PLL",
-		altpll_component.lpm_type = "altpll",
-		altpll_component.operation_mode = "NORMAL",
-		altpll_component.pll_type = "AUTO",
-		altpll_component.port_activeclock = "PORT_UNUSED",
-		altpll_component.port_areset = "PORT_USED",
-		altpll_component.port_clkbad0 = "PORT_UNUSED",
-		altpll_component.port_clkbad1 = "PORT_UNUSED",
-		altpll_component.port_clkloss = "PORT_UNUSED",
-		altpll_component.port_clkswitch = "PORT_UNUSED",
-		altpll_component.port_configupdate = "PORT_UNUSED",
-		altpll_component.port_fbin = "PORT_UNUSED",
-		altpll_component.port_inclk0 = "PORT_USED",
-		altpll_component.port_inclk1 = "PORT_UNUSED",
-		altpll_component.port_locked = "PORT_USED",
-		altpll_component.port_pfdena = "PORT_UNUSED",
-		altpll_component.port_phasecounterselect = "PORT_UNUSED",
-		altpll_component.port_phasedone = "PORT_UNUSED",
-		altpll_component.port_phasestep = "PORT_UNUSED",
-		altpll_component.port_phaseupdown = "PORT_UNUSED",
-		altpll_component.port_pllena = "PORT_UNUSED",
-		altpll_component.port_scanaclr = "PORT_UNUSED",
-		altpll_component.port_scanclk = "PORT_UNUSED",
-		altpll_component.port_scanclkena = "PORT_UNUSED",
-		altpll_component.port_scandata = "PORT_UNUSED",
-		altpll_component.port_scandataout = "PORT_UNUSED",
-		altpll_component.port_scandone = "PORT_UNUSED",
-		altpll_component.port_scanread = "PORT_UNUSED",
-		altpll_component.port_scanwrite = "PORT_UNUSED",
-		altpll_component.port_clk0 = "PORT_USED",
-		altpll_component.port_clk1 = "PORT_UNUSED",
-		altpll_component.port_clk2 = "PORT_UNUSED",
-		altpll_component.port_clk3 = "PORT_UNUSED",
-		altpll_component.port_clk4 = "PORT_UNUSED",
-		altpll_component.port_clk5 = "PORT_UNUSED",
-		altpll_component.port_clkena0 = "PORT_UNUSED",
-		altpll_component.port_clkena1 = "PORT_UNUSED",
-		altpll_component.port_clkena2 = "PORT_UNUSED",
-		altpll_component.port_clkena3 = "PORT_UNUSED",
-		altpll_component.port_clkena4 = "PORT_UNUSED",
-		altpll_component.port_clkena5 = "PORT_UNUSED",
-		altpll_component.port_extclk0 = "PORT_UNUSED",
-		altpll_component.port_extclk1 = "PORT_UNUSED",
-		altpll_component.port_extclk2 = "PORT_UNUSED",
-		altpll_component.port_extclk3 = "PORT_UNUSED",
-		altpll_component.self_reset_on_loss_lock = "OFF",
-		altpll_component.width_clock = 5;
-
+				.locked (sub_wire5));
 
 endmodule
 

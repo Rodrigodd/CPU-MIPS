@@ -14,7 +14,7 @@ module Multiplicador #(
 wire[WIDTH:0] Soma;
 wire Load, Sh, Ad, K;
 
-Control c1 (Load, Sh, Ad, Clk, K, Produto[0], Reset);
+MulControl c1 (Load, Sh, Ad, Clk, K, Produto[0], Reset);
 ACC #(2*WIDTH+1) c2 (
 	Produto,
 	{ Soma, Multiplicador }, Multiplicando,

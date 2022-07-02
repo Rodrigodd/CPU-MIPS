@@ -1,4 +1,4 @@
-module Control(
+module MulControl(
 	output reg Load, Sh, Ad,
 	input Clk, K, M, Reset
 );

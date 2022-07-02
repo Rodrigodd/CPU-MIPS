@@ -1,7 +1,11 @@
 `timescale 1ns/1ps
 module TB();
 
+parameter T_CLK = 20; // 50 MHz
+parameter T_CLK_SYS = 20*32; // 50/32 MHz
+
 reg clk;
+
 reg rst;
 reg data_bus_read;
 wire [31:0] addr;
@@ -19,10 +23,13 @@ cpu #(
 	data_bus_write
 );
 
-reg [31:0] a, b, c, imm, d_mem;
+reg clk_sys, clk_mul, pll_locked;
+reg [31:0] instr, pc, a, b, c, imm, d_mem;
 reg [11:0] ctrl_ex;
 reg [7:0] ctrl_mem;
 reg [6:0] ctrl_wb;
+
+reg Load;
 
 wire c_sel; // ALU operator is B or IMM?
 wire d_sel; // MUL or ALU?
@@ -35,6 +42,11 @@ wire [4:0] write_back_reg; // target register
 assign { c_sel, d_sel, op_sel, _wr_rd, wb_sel, write_back_en, write_back_reg } = ctrl_ex;
 
 initial begin
+	$init_signal_spy("/DUT/clk_sys", "clk_sys", 1);
+	$init_signal_spy("/DUT/clk_mul", "clk_mul", 1);
+	$init_signal_spy("/DUT/pll_locked", "pll_locked", 1);
+	$init_signal_spy("/DUT/instr", "instr", 1);
+	$init_signal_spy("/DUT/pc_address", "pc", 1);
 	$init_signal_spy("/DUT/a_ex", "a", 1);
 	$init_signal_spy("/DUT/b_ex", "b", 1);
 	$init_signal_spy("/DUT/c_ex", "c", 1);
@@ -44,18 +56,19 @@ initial begin
 	$init_signal_spy("/DUT/ctrl_mem", "ctrl_mem", 1);
 	$init_signal_spy("/DUT/ctrl_wb", "ctrl_wb", 1);
 
+	$init_signal_spy("/DUT/MULT/Load", "Load", 1);
+
 	clk = 0;
 	rst = 1;
 	data_bus_read = 0;
-	#20
+	#T_CLK
 	rst = 0;
 
-	#200
+	# (T_CLK_SYS * 10)
 	$stop();
 end
 
-// f = 50 MHz => Tc = 20 ns
-always #10 clk = ~clk;
+always # (T_CLK) clk = ~clk;
 
 endmodule
 

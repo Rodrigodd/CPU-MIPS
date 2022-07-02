@@ -9,18 +9,33 @@ module cpu #(
 	output [31:0] data_bus_write
 );
 
+wire clk_sys;
+wire clk_mul;
+wire pll_locked;
+wire rst_sys;
+
+assign clk_mul = clk;
+assign rst_sys = rst || !pll_locked;
+
+PLL PLL_(
+	rst,
+	clk,
+	clk_sys,
+	pll_locked
+);
+
 /// Instruction Fetch
 
 wire [31:0] instr;
 wire [31:0] pc_address;
 
 PC PC_(
-	clk, rst,
+	clk_sys, rst_sys,
 	pc_address
 );
 
-InstructionMemory IM(
-	clk, rst,
+InstructionMemory #(CODE) IM(
+	clk_sys, rst_sys,
 	pc_address,
 	instr
 );
@@ -39,7 +54,7 @@ wire[31:0] _imm, imm;
 wire[11:0] _ctrl_ex, ctrl_ex;
 
 RegisterFile RF(
-	clk, rst,
+	clk_sys, rst_sys,
 	write_back_en, write_back_reg, write_back,
 	a_reg, b_reg,
 	_a_ex, _b_ex
@@ -56,22 +71,22 @@ Extend EXT(
 );
 
 Register A_EX(
-	clk, rst,
+	clk_sys, rst_sys,
 	_a_ex, a_ex
 );
 
 Register B_EX(
-	clk, rst,
+	clk_sys, rst_sys,
 	_b_ex, b_ex
 );
 
 Register #(12) CTRL_EX(
-	clk, rst,
+	clk_sys, rst_sys,
 	_ctrl_ex, ctrl_ex
 );
 
 Register IMM(
-	clk, rst,
+	clk_sys, rst_sys,
 	_imm, imm
 );
 
@@ -87,10 +102,10 @@ wire [7:0] _ctrl_mem, ctrl_mem;
 
 assign { c_sel, d_sel, op_sel, _ctrl_mem } = ctrl_ex;
 
-Multiplicador MULT(
-	clk, rst,
+Multiplicador #(16) MULT(
+	mul,
 	a_ex, b_ex,
-	mul
+	clk_mul, rst_sys
 );
 
 MUX C_SEL(
@@ -112,17 +127,17 @@ MUX D_EX_SEL(
 );
 
 Register D_MEM(
-	clk, rst,
+	clk_sys, rst_sys,
 	d_ex, d_mem
 );
 
 Register B_MEM(
-	clk, rst,
+	clk_sys, rst_sys,
 	b_ex, b_mem
 );
 
 Register #(8) CTRL_MEM(
-	clk, rst,
+	clk_sys, rst_sys,
 	_ctrl_mem, ctrl_mem
 );
 
@@ -141,8 +156,8 @@ ADDRDecoding DEC(
 	cs
 );
 
-DataMemory MEM(
-	clk, rst,
+DataMemory #(DATA) MEM(
+	clk_sys, rst_sys,
 	addr, data_bus_write,  wr_rd,
 	c_mem
 );
@@ -154,17 +169,17 @@ MUX D_WB_SEL(
 );
 
 Register D_WB(
-	clk, rst,
+	clk_sys, rst_sys,
 	_d_wb, d_wb
 );
 
 Register M_WB(
-	clk, rst,
+	clk_sys, rst_sys,
 	m_mem, m_wb
 );
 
 Register #(7) CTRL_WB(
-	clk, rst,
+	clk_sys, rst_sys,
 	_ctrl_wb, ctrl_wb
 );
 
