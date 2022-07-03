@@ -3,14 +3,21 @@ module MulControl(
 	input Clk, K, M, Reset
 );
 
-//   ┌───────────────(Sh)────────────┐
-//   │                               │
-//   ▼                               │
-//  |S0|───<K>0────►<M>0───────────►|S1|
-//          1        1               ▲
-//          ▼        ▼               │
-//        (Load)   (Add)             │
-//          └────────┴───────────────┘
+// K: O contador está em zero (terminou a última operação).
+// M: Se atualmente ACC[0] == 1.
+//
+// Load: Inicia uma operação ao carregar { Multiplicador[0] ? Multiplicando : 0, Multiplicador } no ACC.
+// Sh: desloca 1 bit a direita o valor no ACC.
+// Ad: Soma Multiplicando nos 5 msb do ACC.
+//
+//         ┌───────────────(Sh)◀───────────┐
+//         │                               │
+//         ▼                               │
+//Reset──▶|S0|──▶<K>0────▶<M>0───────────▶|S1|
+//                1        1               ▲
+//                ▼        ▼               │
+//              (Load)    (Ad)             │
+//                └────────┴───────────────┘
 
 // Declare states
 parameter S0 = 0, S1 = 1;
