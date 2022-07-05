@@ -3,16 +3,19 @@ module PC_TB();
 
 reg clk;
 reg rst;
+wire [31:0] pc;
 
 PC DUT(
-	clk, rst
+	.clk(clk), .rst(rst), .pc(pc)
 );
 
 initial begin
 	clk = 0;
 	rst = 1;
-	#20
+	
+	#40
 	rst = 0;
+	
 
 	#200
 	$stop();

@@ -1,5 +1,5 @@
 module InstructionMemory #(
-	parameter INITIAL = "code.txt",
+	parameter INITIAL = "../../code.txt",
 	parameter DATA_WIDTH = 32,
 	parameter ADDR_WIDTH = 10
 ) (
