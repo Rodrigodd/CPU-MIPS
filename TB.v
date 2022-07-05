@@ -23,13 +23,16 @@ cpu #(
 	data_bus_write
 );
 
-reg clk_sys, clk_mul, pll_locked;
+reg clk_sys, clk_mul, pll_locked, sync_mul;
 reg [31:0] instr, pc, a, b, c, imm, d_mem;
 reg [11:0] ctrl_ex;
 reg [7:0] ctrl_mem;
 reg [6:0] ctrl_wb;
 
 reg Load;
+reg StSync;
+reg [1:0] mul_state;
+reg [4:0] counter;
 
 wire c_sel; // ALU operator is B or IMM?
 wire d_sel; // MUL or ALU?
@@ -45,6 +48,7 @@ initial begin
 	$init_signal_spy("/DUT/clk_sys", "clk_sys", 1);
 	$init_signal_spy("/DUT/clk_mul", "clk_mul", 1);
 	$init_signal_spy("/DUT/pll_locked", "pll_locked", 1);
+	$init_signal_spy("/DUT/sync_mul", "sync_mul", 1);
 	$init_signal_spy("/DUT/instr", "instr", 1);
 	$init_signal_spy("/DUT/pc_address", "pc", 1);
 	$init_signal_spy("/DUT/a_ex", "a", 1);
@@ -57,6 +61,9 @@ initial begin
 	$init_signal_spy("/DUT/ctrl_wb", "ctrl_wb", 1);
 
 	$init_signal_spy("/DUT/MULT/Load", "Load", 1);
+	$init_signal_spy("/DUT/MULT/StSync", "StSync", 1);
+	$init_signal_spy("/DUT/MULT/c1/state", "mul_state", 1);
+	$init_signal_spy("/DUT/MULT/c3/counter", "counter", 1);
 
 	clk = 0;
 	rst = 1;
@@ -68,7 +75,7 @@ initial begin
 	$stop();
 end
 
-always # (T_CLK) clk = ~clk;
+always # (T_CLK/2) clk = ~clk;
 
 endmodule
 

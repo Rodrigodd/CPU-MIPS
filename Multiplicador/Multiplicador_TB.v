@@ -8,13 +8,14 @@ module Multiplicador_tb();
             $stop; \
         end
 
+parameter CLK = 20;
 
 wire [31:0] Produto;
 
 reg [15:0] Multiplicando, Multiplicador;
-reg Clk, Reset;
+reg Sy, Clk, Reset;
 
-reg state;
+reg [1:0] state;
 reg [4:0] counter;
 reg Load, K;
 
@@ -22,6 +23,7 @@ Multiplicador DUT (
 	.Produto(Produto),
 	.Multiplicando(Multiplicando),
 	.Multiplicador(Multiplicador),
+	.Sy(Sy),
 	.Clk(Clk),
 	.Reset(Reset)
 );
@@ -36,16 +38,27 @@ initial begin
 	Multiplicando = 0;
 	Multiplicador = 0;
 	Reset = 1;
+	Sy = 0;
 	
 	
-	# 20
+	# CLK // Reseta
 
 	Reset = 0;
+
+	// `assert(Produto, 0);
+
+	#CLK;
+
+	Sy = 1; // Start Sincronization
+	
+	# 10; // clock 1
+
+	#(30*CLK); // clk 31
 	
 	Multiplicando = 12;
 	Multiplicador = 75;
 
-	# 10 // clock 0, load Multiplicador to Produto.
+	# CLK; // clock 0, load Multiplicador to Produto.
 
 	# 10
 	
@@ -53,7 +66,7 @@ initial begin
 
 	# 10; // clock 1
 	
-	# (30*20) // clock 31, last clock, results done
+	# (30*CLK) // clock 31, last clock, results done
 
 	# 5
 
@@ -73,7 +86,7 @@ initial begin
 
 	# 10; // clock 1
 
-	# (30*20); // clock 31
+	# (30*CLK); // clock 31
 
 	#5
 
@@ -85,15 +98,15 @@ initial begin
 	Multiplicando = 16'hFFFF;
 	Multiplicador = 16'hFFFF;
 	
-	# 10 // clock 0
+	# (CLK-10) // clock 0
 
 	# 10;
 	
 	`assert(Produto, { Multiplicando, Multiplicador })
 
-	# 10; // clock 1
+	# (CLK-10); // clock 1
 
-	# (30*20); // clock 31
+	# (30*CLK); // clock 31
 
 	#5
 
@@ -101,13 +114,13 @@ initial begin
 
 	# 5;
 
-	# 10;
+	# (CLK-10);
 	$stop();
 	
 end
 
 always begin
-	#10 Clk = ~Clk;
+	# (CLK/2) Clk = ~Clk;
 end
 
 endmodule

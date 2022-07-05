@@ -1,5 +1,5 @@
 module DataMemory #(
-	parameter INITIAL = "data.txt",
+	parameter INITIAL = "../data.txt",
 	parameter DATA_WIDTH = 32,
 	parameter ADDR_WIDTH = 10
 ) (
@@ -24,12 +24,16 @@ initial begin for (i = 0; i < 2**ADDR_WIDTH - 1; i = i + 1) begin
 	$readmemh(INITIAL, ram, 0);
 end
 
-always @ (posedge clk) begin
-	// Write
-	if (wr_rd == 0)
-		ram[addr] <= data_in;
+always @ (posedge clk or posedge rst) begin
+	if(rst)
+		addr_reg <= 0;
+	else begin	
+		// Write
+		if (wr_rd == 0)
+			ram[addr] <= data_in;
 
-	addr_reg <= addr;
+		addr_reg <= addr;
+	end
 end
 
 // Continuous assignment implies read returns NEW data.

@@ -1,0 +1,22 @@
+{
+	"system" : {
+		"platform" : "windows64",
+		"os_name" : "Windows 10",
+		"os_version" : "10.0"
+	},
+	"error" : {
+		"executable" : "quartus_sh",
+		"comment" : "not_applicable",
+		"error_message" : "\nQuartus Prime requested that Windows modify job info, but Windows could not do so.\nPlease report the full text of this message to Intel so we can investigate its causes.\nIn the meantime, may wish to take the following steps to work around the problem:\n   * Disabled parallel compilation if it is enabled\n   * Ensure you have sufficient memory to run Quartus.\n   * Ensure all service packs and patches from Microsoft are installed\n\nTechnical details:\n   * API: result\n   * OS code: 6 (Identificador inválido.)\n",
+		"source_file" : "/quartus/ccl/thr/thr_process.cpp",
+		"line" : "478",
+		"stack_trace" : "\t0x7ffabac624c8: ccl_thr + 0x24c8 (thr_os_error + 0xb8)\n\t0x7ffabac62f1d: ccl_thr + 0x2f1d (thr_windows_error + 0xad)\n\t0x7ffabac61cce: ccl_thr + 0x1cce (thr_process_create_and_save_job + 0x6fe)\n\t0x7ffabac615c5: ccl_thr + 0x15c5 (thr_process_create + 0x25)\n\t0x7ffabb555ca8: CCL_MSG + 0x35ca8 (?search_and_send_crash_report@MSG_CRASH_REPORT_MANAGER@@QEAAXXZ + 0x178)\n\t0x7ffacad71756: comp_qexe + 0x11756 (qexe_do_tcl + 0x226)\n\t0x7ffacad75fe6: comp_qexe + 0x15fe6 (qexe_run + 0x2d6)\n\t0x7ffacad76e51: comp_qexe + 0x16e51 (?qexe_standard_main@@YAHPEAVQEXE_FRAMEWORK@@PEAPEBUQEXE_OPTION_DEFINITION@@HPEAPEBD@Z + 0xc1)\n\t0x7ff631974ed2: quartus_sh + 0x4ed2 (?qsh_main@@YAHHPEAPEBD@Z + 0x52)\n\t0x7ffabb532e98: CCL_MSG + 0x12e98 (?msg_main_thread@@YAPEAXPEAX@Z + 0x18)\n\t0x7ffabb53467e: CCL_MSG + 0x1467e (?msg_thread_wrapper@@YAPEAXP6APEAXPEAX@Z0@Z + 0x6e)\n\t0x7ffabb636660: ccl_mem + 0x16660 (?mem_thread_wrapper@@YAPEAXP6APEAXPEAX@Z0@Z + 0x70)\n\t0x7ffabb532761: CCL_MSG + 0x12761 (?msg_exe_main@@YAHHPEAPEBDP6AHH0@Z@Z + 0xa1)\n\t0x7ff631975396: quartus_sh + 0x5396 (__tmainCRTStartup + 0x10e)\n\t0x7ffae8497033: KERNEL32 + 0x17033 (BaseThreadInitThunk + 0x13)\n\t0x7ffae9962650: ntdll + 0x52650 (RtlUserThreadStart + 0x20)\n",
+		"subsystem" : "THR"
+	},
+	"quartus" : {
+		"quartus_bits" : "64",
+		"version" : "18.1.0",
+		"build" : "625",
+		"edition" : "Lite Edition"
+	}
+}

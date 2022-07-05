@@ -15,13 +15,33 @@ wire pll_locked;
 wire rst_sys;
 
 assign clk_mul = clk;
-assign rst_sys = rst || !pll_locked;
+assign rst_sys = rst || !pll_locked; // O sistema permanece resetado enquanto o PLL não estiver "locked".
 
 PLL PLL_(
 	rst,
 	clk,
 	clk_sys,
 	pll_locked
+);
+
+// O sync_mul é usado para sincronizar o periodo de operação do multiplicador
+// com o clk_sys. Mais informações sobre esse sinal estão em
+// Multiplicador/Control/Control.v.
+//
+// A primeira borda de subida de clk_sys ocorre no mesmo instante que o sinal
+// pll_locked é ativo, mas essa borda de subida ocorre fora de fase, de modo
+// que o primeiro periodo de clock do sistema seja menor que os demais. Logo
+// o sinal de sync_mul precisa ser atrasado em 1 cyclo.
+
+wire sync_mul1, sync_mul;
+
+Register SYNC_MUL1(
+	clk_sys, rst_sys,
+	pll_locked, sync_mul1
+);
+Register SYNC_MUL(
+	clk_sys, rst_sys,
+	sync_mul1, sync_mul
 );
 
 /// Instruction Fetch
@@ -105,6 +125,7 @@ assign { c_sel, d_sel, op_sel, _ctrl_mem } = ctrl_ex;
 Multiplicador #(16) MULT(
 	mul,
 	a_ex, b_ex,
+	sync_mul,
 	clk_mul, rst_sys
 );
 
