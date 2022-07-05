@@ -8,19 +8,23 @@ module Multiplicador #(
 ) (
 	output [2*WIDTH-1:0] Produto,
 	input [WIDTH-1:0] Multiplicando, Multiplicador,
+	input Sy,
 	input Clk, Reset
 );
 
-wire[WIDTH:0] Soma;
-wire Load, Sh, Ad, K;
+// A descrição dos sinais Load, Sh, Ad, K, Sy e StSync estão em
+// `Multiplicador\Control\Control.v`.
 
-MulControl c1 (Load, Sh, Ad, Clk, K, Produto[0], Reset);
+wire[WIDTH:0] Soma;
+wire Load, Sh, Ad, K, StSync;
+
+MulControl c1 (Load, Sh, Ad, StSync, Clk, K, Produto[0], Sy, Reset);
 ACC #(2*WIDTH+1) c2 (
 	Produto,
 	{ Soma, Multiplicador }, Multiplicando,
 	Load, Sh, Ad, Clk, Reset
 );
-Counter #(.COUNT(2*WIDTH - 1)) c3 (K, Load, Clk, Reset);
+Counter #(.COUNT(2*WIDTH - 1)) c3 (K, Load, StSync, Clk, Reset);
 Adder #(WIDTH) c4 (Soma, Multiplicando, Produto[2*WIDTH-1:WIDTH]);
 
 endmodule
