@@ -3,7 +3,7 @@ module cpu #(
 	parameter DATA = "data.txt"
 ) (
 	input clk, rst,
-	input data_bus_read,
+	input [31:0] data_bus_read,
 	output [31:0] addr, 
 	output cs, wr_rd,
 	output [31:0] data_bus_write
@@ -164,11 +164,15 @@ Register #(8) CTRL_MEM(
 
 /// Memory
 
-wire [31:0] c_mem, m_mem, _d_wb, d_wb, m_wb;
+wire [31:0] c_mem, d_wb, _m_wb, m_wb;
+wire rd_wr;
 
 wire [6:0] _ctrl_wb, ctrl_wb;
 
-assign { wr_rd, _ctrl_wb } = ctrl_mem;
+assign { rd_wr, _ctrl_wb } = ctrl_mem;
+
+assign wr_rd = !rd_wr;
+
 assign addr = d_mem;
 assign data_bus_write = b_mem;
 
@@ -179,24 +183,24 @@ ADDRDecoding DEC(
 
 DataMemory #(DATA) MEM(
 	clk_sys, rst_sys,
-	addr, data_bus_write,  wr_rd,
+	{ !addr[9], addr[8:0] }, data_bus_write,  wr_rd,
 	c_mem
 );
 
-MUX D_WB_SEL(
+MUX M_WB_SEL(
 	c_mem, data_bus_read,
 	cs,
-	_d_wb
+	_m_wb
 );
 
 Register D_WB(
 	clk_sys, rst_sys,
-	_d_wb, d_wb
+	d_mem, d_wb
 );
 
 Register M_WB(
 	clk_sys, rst_sys,
-	m_mem, m_wb
+	_m_wb, m_wb
 );
 
 Register #(7) CTRL_WB(

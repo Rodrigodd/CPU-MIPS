@@ -1,19 +1,19 @@
 module Control(
 	input [31:0] instr,
 	output reg [4:0] a_reg, b_reg,
-	// { c_sel[1], d_sel[1], op_sel[2], wr_rd[1], wb_sel[1], write_back_en[1], write_back_reg[5] }
+	// { c_sel[1], d_sel[1], op_sel[2], rd_wr[1], wb_sel[1], write_back_en[1], write_back_reg[5] }
 	output [11:0] ctrl_ex
 );
 
 reg c_sel; // ALU operator is B or IMM?
 reg d_sel; // MUL or ALU?
 reg [1:0] op_sel; // +, -, & or |?
-reg wr_rd; // 0 = write, 1 = read
+reg rd_wr; // 0 = read, 1 = write
 reg wb_sel; // write back D or M?
 reg write_back_en; // 1 = write to register
 reg [4:0] write_back_reg; // target register
 
-assign ctrl_ex = { c_sel, d_sel, op_sel, wr_rd, wb_sel, write_back_en, write_back_reg };
+assign ctrl_ex = { c_sel, d_sel, op_sel, rd_wr, wb_sel, write_back_en, write_back_reg };
 
 // f0: 31 30 29 28 27 26
 // rs: 25 24 23 22 21
@@ -44,7 +44,7 @@ always @(func0, rs, rt, rd, func1, func2) begin
 	c_sel = 1;
 	d_sel = 1;
 	op_sel = 3;
-	wr_rd = 1;
+	rd_wr = 0;
 	wb_sel = 0;
 	write_back_en = 0;
 	write_back_reg = 0;
@@ -56,7 +56,7 @@ always @(func0, rs, rt, rd, func1, func2) begin
 				a_reg = rs;
 				b_reg = rt;
 				c_sel = 0;
-				wr_rd = 1;
+				rd_wr = 0;
 				wb_sel = 0;
 				write_back_en = 1;
 				write_back_reg = rd;
@@ -97,7 +97,7 @@ always @(func0, rs, rt, rd, func1, func2) begin
 			c_sel = 1;
 			op_sel = 0;
 			d_sel = 1;
-			wr_rd = 1;
+			rd_wr = 0;
 			wb_sel = 1;
 			write_back_en = 1;
 			write_back_reg = rt;
@@ -109,7 +109,7 @@ always @(func0, rs, rt, rd, func1, func2) begin
 			c_sel = 1;
 			op_sel = 0;
 			d_sel = 1;
-			wr_rd = 0;
+			rd_wr = 1;
 			wb_sel = 1;
 			write_back_en = 0;
 			write_back_reg = 0;
