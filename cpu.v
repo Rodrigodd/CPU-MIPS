@@ -182,7 +182,9 @@ ADDRDecoding DEC(
 );
 
 DataMemory #(DATA) MEM(
-	clk_sys, rst_sys,
+	// a memória contém um registro para a saída, logo ela é sincronizada com
+	// a borda de subida do clock, para que ela não fique atrasada de 1 ciclo.
+	~clk_sys, rst_sys,
 	{ !addr[9], addr[8:0] }, data_bus_write,  wr_rd,
 	c_mem
 );
