@@ -124,7 +124,7 @@ assign { c_sel, d_sel, op_sel, _ctrl_mem } = ctrl_ex;
 
 Multiplicador #(16) MULT(
 	mul,
-	a_ex, b_ex,
+	_a_ex, _b_ex, a_ex,
 	sync_mul,
 	clk_mul, rst_sys
 );
