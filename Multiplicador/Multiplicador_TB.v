@@ -47,7 +47,7 @@ initial begin
 
 	Reset = 0;
 
-	// `assert(Produto, 0);
+	`assert(Produto, 0)
 
 	#CLK;
 
@@ -71,18 +71,16 @@ initial begin
 	
 	# (30*CLK) // clock 31, last clock, results done
 
-	# 5
-
-	`assert(Produto, Multiplicador * Multiplicando)
-
-	# 5;
-
 	// load next operants
 	Multiplicando = 16;
-	MultiplicandoReg = 16;
 	Multiplicador = 5;
-	
-	# 10 // clock 0
+
+	# CLK // clock 0
+	`assert(Produto, 12*75) // last result is done
+
+	// save to Multiplicando to Register
+	MultiplicandoReg = Multiplicando;
+
 
 	# 10;
 	
@@ -92,18 +90,16 @@ initial begin
 
 	# (30*CLK); // clock 31
 
-	#5
-
-	`assert(Produto, Multiplicador * Multiplicando)
-
-	# 5;
-
 	// load next operants
 	Multiplicando = 16'hFFFF;
-	MultiplicandoReg = 16'hFFFF;
 	Multiplicador = 16'hFFFF;
-	
-	# (CLK-10) // clock 0
+
+	# CLK; // clock 0
+
+	`assert(Produto, 16*5) // last result is done
+
+	// save to Multiplicando to Register
+	MultiplicandoReg = Multiplicando;
 
 	# 10;
 	
@@ -113,18 +109,16 @@ initial begin
 
 	# (30*CLK); // clock 31
 
-	#5
-
-	`assert(Produto, Multiplicador * Multiplicando)
-
-	# 5;
-
 	// load next operants
 	Multiplicando = 16'hfa1;
-	MultiplicandoReg = 16'hfa1;
 	Multiplicador = 16'h7d1;
-	
-	# (CLK-10) // clock 0
+
+	# CLK; // clock 0
+
+	`assert(Produto, 32'hFFFF * 32'hFFFF) // last result is done
+
+	// save to Multiplicando to Register
+	MultiplicandoReg = Multiplicando;
 
 	# 10;
 	
@@ -137,13 +131,10 @@ initial begin
 
 	# (30*CLK); // clock 31
 
-	#5
+	# CLK;
 
-	`assert(Produto, Multiplicador * Multiplicando)
+	`assert(Produto, 32'hfa1 * 32'h7d1) // last result is done
 
-	# 5;
-
-	# (CLK-10);
 	$stop();
 	
 end

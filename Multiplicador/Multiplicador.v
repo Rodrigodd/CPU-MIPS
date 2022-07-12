@@ -22,11 +22,14 @@ module Multiplicador #(
 // `Multiplicador\Control\Control.v`.
 
 wire[WIDTH:0] Soma;
+wire[2*WIDTH:0] Saidas;
 wire Load, Sh, Ad, K, StSync;
+
+assign Produto = Saidas[2*WIDTH-1:0];
 
 MulControl c1 (Load, Sh, Ad, StSync, Clk, K, Produto[0], Sy, Reset);
 ACC #(WIDTH) c2 (
-	Produto,
+	Saidas,
 	Soma, Multiplicador, Multiplicando,
 	Load, Sh, Ad, Clk, Reset
 );
