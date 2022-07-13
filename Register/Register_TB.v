@@ -17,8 +17,13 @@ initial begin
 	d = 1;
 	rst = 0;
 	
+	#50 d = 0;
+	
 	#100
 	rst = ~rst;
+	d = 1;
+	
+	#50 d = 0;
 
 	#200
 	$stop();
