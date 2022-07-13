@@ -1,25 +1,35 @@
 `timescale 1ns/1ps
 module ADDRDecoding_TB();
 
-reg clk;
-reg rst;
+reg [31:0] addr;
+wire cs; // 0 = memoria interna, 1 = memoria externa
+integer k = 0;
+
 
 ADDRDecoding DUT(
-	clk, rst
+	.addr(addr),
+	.cs(cs)
 );
 
 initial begin
-	clk = 0;
-	rst = 1;
-	#20
-	rst = 0;
-
+	// Testando endereço anterior ao intervalo
+	addr = 32'h09FF;
+		
+	// Testando endereços dentro do intervalo
+	#20 addr = 32'h0A00;
+	#20 addr = 32'h0AFF;
+	#20 addr = 32'h0B00;
+	#20 addr = 32'h0BFF;
+	#20 addr = 32'h0C00;
+	#20 addr = 32'h0CFF;
+	#20 addr = 32'h0D00;
+	#20 addr = 32'h0DFF;
+	
+	//Testando enderço posterior ao intervalo
+	#20 addr = 32'h0E00;
+		
 	#200
 	$stop();
 end
 
-// f = 50 MHz => Tc = 20
-always #10 clk = ~clk;
-
 endmodule
-
