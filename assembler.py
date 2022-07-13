@@ -89,8 +89,8 @@ def assemble(path):
                 elif args[0] in ['add', 'sub', 'and', 'or', 'mul']:
                     f0 = bin(2, 6)
                     rd = reg(args[1])
-                    rt = reg(args[2])
-                    rs = reg(args[3])
+                    rs = reg(args[2])
+                    rt = reg(args[3])
                     f1 = bin(10, 5)
                     i = ['add', 'sub', 'and', 'or', 'mul'].index(args[0])
                     f2 = bin([32, 34, 36, 37, 50][i], 6)
