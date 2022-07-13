@@ -12,7 +12,7 @@ parameter CLK = 20;
 
 wire [31:0] Produto;
 
-reg [15:0] Multiplicando, Multiplicador, MultiplicandoReg;
+reg [15:0] Multiplicando, Multiplicador;
 reg Sy, Clk, Reset;
 
 reg [2:0] state;
@@ -23,7 +23,6 @@ Multiplicador DUT (
 	.Produto(Produto),
 	.Multiplicando(Multiplicando),
 	.Multiplicador(Multiplicador),
-	.MultiplicandoReg(MultiplicandoReg),
 	.Sy(Sy),
 	.Clk(Clk),
 	.Reset(Reset)
@@ -37,7 +36,6 @@ initial begin
 	
 	Clk = 0;
 	Multiplicando = 0;
-	MultiplicandoReg = 0;
 	Multiplicador = 0;
 	Reset = 1;
 	Sy = 0;
@@ -58,18 +56,15 @@ initial begin
 	#(31*CLK); // clk 32
 	
 	Multiplicando = 12;
-	MultiplicandoReg = 12;
 	Multiplicador = 75;
 
-	# CLK; // clock 0, load Multiplicador to Produto.
+	# (2*CLK); // clock 1, load Multiplicador to Produto.
 
-	# 10
+	# CLK // clock 2
 	
 	`assert(Produto, { Multiplicando, Multiplicador })
-
-	# 10; // clock 1
 	
-	# (31*CLK) // clock 32, last clock, results done
+	# (30*CLK) // clock 32, last clock, results done
 
 	// load next operants
 	Multiplicando = 16;
@@ -78,17 +73,13 @@ initial begin
 	# CLK // clock 0
 	`assert(Produto, 12*75) // last result is done
 
-	// save to Multiplicando to Register
-	MultiplicandoReg = Multiplicando;
+	# CLK; // clock 1, load Multiplicador to Produto.
 
-
-	# 10;
+	# CLK // clock 2
 	
 	`assert(Produto, { Multiplicando, Multiplicador })
-
-	# 10; // clock 1
-
-	# (31*CLK); // clock 32
+	
+	# (30*CLK) // clock 32, last clock, results done
 
 	// load next operants
 	Multiplicando = 16'hFFFF;
@@ -98,16 +89,13 @@ initial begin
 
 	`assert(Produto, 16*5) // last result is done
 
-	// save to Multiplicando to Register
-	MultiplicandoReg = Multiplicando;
+	# CLK; // clock 1, load Multiplicador to Produto.
 
-	# 10;
+	# CLK // clock 2
 	
 	`assert(Produto, { Multiplicando, Multiplicador })
-
-	# (CLK-10); // clock 1
-
-	# (31*CLK); // clock 32
+	
+	# (30*CLK) // clock 32, last clock, results done
 
 	// load next operants
 	Multiplicando = 16'hfa1;
@@ -117,19 +105,13 @@ initial begin
 
 	`assert(Produto, 32'hFFFF * 32'hFFFF) // last result is done
 
-	// save to Multiplicando to Register
-	MultiplicandoReg = Multiplicando;
+	# CLK; // clock 1, load Multiplicador to Produto.
 
-	# 10;
+	# CLK // clock 2
 	
 	`assert(Produto, { Multiplicando, Multiplicador })
-	// Multiplicador should only read from MultiplicandoReg, and changing
-	// Multiplicando should not impact the computation.
-	Multiplicando = 16'h0; 
-
-	# (CLK-10); // clock 1
-
-	# (31*CLK); // clock 32
+	
+	# (30*CLK) // clock 32, last clock, results done
 
 	# CLK;
 
