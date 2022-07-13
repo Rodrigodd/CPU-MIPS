@@ -13,15 +13,12 @@ Register DUT(
 );
 
 initial begin
-
-	rst = 1;
-	#50
+	clk = 0;
 	d = 1;
-	
-	#50
 	rst = 0;
-	#50
-	d = 0;
+	
+	#100
+	rst = ~rst;
 
 	#200
 	$stop();
@@ -29,6 +26,7 @@ end
 
 // f = 50 MHz => Tc = 20
 always #10 clk = ~clk;
+
 
 endmodule
 
