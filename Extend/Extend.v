@@ -3,7 +3,8 @@ module Extend(
 	output [31:0] imm
 );
 
-assign imm = { 16'b0, instr[15:0] };
+// Fazendo extensão de sinal
+assign imm = { {16{instr[15]}}, instr[15:0] };
 
 endmodule
 
