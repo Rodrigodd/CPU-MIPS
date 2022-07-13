@@ -1,6 +1,10 @@
 import sys
 import re
 
+
+MEM_BASE_ADDRESS = 0x0A00
+symbol_address = {}
+
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
@@ -12,9 +16,22 @@ def hex(n):
 
 def reg(s):
     if s[0] != "r":
-        eprint("registers should start with r: {}", s)
+        eprint("registers should start with r: {}".format(s))
 
     return bin(int(s[1:]), 5)
+
+def num(s):
+    if s[0:2] == '0x':
+        return int(s[2:], 16)
+    
+    if s[0].isdigit():
+        return int(s, 10)
+
+    if s in symbol_address:
+        return symbol_address[s]
+    else:
+        eprint("unkown symbol '{}'".format(s))
+        return symbol_address[s]
 
 code = []
 data = []
@@ -31,21 +48,26 @@ def assemble(path):
             if line[0] == ".":
                 section = line[1:]
                 if section == "data":
-                    data = True
+                    data_section = True
                 elif section == "text":
-                    data = False
+                    data_section = False
                 else:
                     print("unknown section {}".format(section))
                     return
                 continue
             
-            if data:
-                if len(line) > 8:
-                    eprint('value {} is to long'.format(line))
+            if data_section:
+                args = re.split('\s|:\s|:', line.lower())
+                if len(args) > 1:
+                    symbol_address[args[0]] = len(data) + MEM_BASE_ADDRESS 
+                    num_str = args[1]
+                else:
+                    num_str = args[0]
+                if len(num_str) > 8:
+                    eprint('value {} is to long'.format(num_str))
                     return
 
-                line = '0' * (8 - len(line)) + line
-                data.append(line)
+                data.append(hex(num(num_str)))
             else:
                 args = re.split('\s|,\s|,|\(|\)', line.lower())
                 args = [s for s in args if s != '']
@@ -58,9 +80,9 @@ def assemble(path):
                     else:
                         print('error opcode: {}', args[0])
 
-                    rs = reg(args[1])
-                    offset = bin(int(args[2]), 16)
-                    rt = reg(args[3])
+                    rt = reg(args[1]) # write reg
+                    offset = bin(num(args[2]), 16)
+                    rs = reg(args[3]) # address reg
 
                     out = f0 + rs + rt + offset
                     code.append(hex(int(out, 2)))
@@ -73,7 +95,7 @@ def assemble(path):
                     i = ['add', 'sub', 'and', 'or', 'mul'].index(args[0])
                     f2 = bin([32, 34, 36, 37, 50][i], 6)
 
-                    out = f0 + rs + rt + rd + f1  + f2
+                    out = f0 + rs + rt + rd + f1 + f2
                     code.append(hex(int(out, 2)))
                 else:
                     print('unknown opcode: {}', args[0])
@@ -82,5 +104,13 @@ def assemble(path):
 
 if __name__ == "__main__":
     assemble(sys.argv[1])
-    for l in code:
-        print(l)
+    kind = sys.argv[2] if 2 < len(sys.argv) else "c"
+    if kind == "c":
+        for l in code:
+            print(l)
+    elif kind == "d":
+        for l in data:
+            print(l)
+    else:
+        eprint("unknown arg '{}'".format(kind))
+

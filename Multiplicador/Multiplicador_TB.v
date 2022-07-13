@@ -12,7 +12,7 @@ parameter CLK = 20;
 
 wire [31:0] Produto;
 
-reg [15:0] Multiplicando, Multiplicador;
+reg [15:0] Multiplicando, Multiplicador, MultiplicandoReg;
 reg Sy, Clk, Reset;
 
 reg [1:0] state;
@@ -23,6 +23,7 @@ Multiplicador DUT (
 	.Produto(Produto),
 	.Multiplicando(Multiplicando),
 	.Multiplicador(Multiplicador),
+	.MultiplicandoReg(MultiplicandoReg),
 	.Sy(Sy),
 	.Clk(Clk),
 	.Reset(Reset)
@@ -36,6 +37,7 @@ initial begin
 	
 	Clk = 0;
 	Multiplicando = 0;
+	MultiplicandoReg = 0;
 	Multiplicador = 0;
 	Reset = 1;
 	Sy = 0;
@@ -56,6 +58,7 @@ initial begin
 	#(30*CLK); // clk 31
 	
 	Multiplicando = 12;
+	MultiplicandoReg = 12;
 	Multiplicador = 75;
 
 	# CLK; // clock 0, load Multiplicador to Produto.
@@ -76,6 +79,7 @@ initial begin
 
 	// load next operants
 	Multiplicando = 16;
+	MultiplicandoReg = 16;
 	Multiplicador = 5;
 	
 	# 10 // clock 0
@@ -96,6 +100,7 @@ initial begin
 
 	// load next operants
 	Multiplicando = 16'hFFFF;
+	MultiplicandoReg = 16'hFFFF;
 	Multiplicador = 16'hFFFF;
 	
 	# (CLK-10) // clock 0
@@ -103,6 +108,30 @@ initial begin
 	# 10;
 	
 	`assert(Produto, { Multiplicando, Multiplicador })
+
+	# (CLK-10); // clock 1
+
+	# (30*CLK); // clock 31
+
+	#5
+
+	`assert(Produto, Multiplicador * Multiplicando)
+
+	# 5;
+
+	// load next operants
+	Multiplicando = 16'hfa1;
+	MultiplicandoReg = 16'hfa1;
+	Multiplicador = 16'h7d1;
+	
+	# (CLK-10) // clock 0
+
+	# 10;
+	
+	`assert(Produto, { Multiplicando, Multiplicador })
+	// Multiplicador should only read from MultiplicandoReg, and changing
+	// Multiplicando should not impact the computation.
+	Multiplicando = 16'h0; 
 
 	# (CLK-10); // clock 1
 
