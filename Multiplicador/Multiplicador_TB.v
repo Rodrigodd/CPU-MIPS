@@ -13,17 +13,17 @@ parameter CLK = 20;
 wire [31:0] Produto;
 
 reg [15:0] Multiplicando, Multiplicador;
-reg Sy, Clk, Reset;
+reg St, Clk, Reset;
 
-reg [2:0] state;
-reg [5:0] counter;
+reg [1:0] state;
+reg [4:0] counter;
 reg Load, K;
 
 Multiplicador DUT (
 	.Produto(Produto),
 	.Multiplicando(Multiplicando),
 	.Multiplicador(Multiplicador),
-	.Sy(Sy),
+	.St(St),
 	.Clk(Clk),
 	.Reset(Reset)
 );
@@ -38,7 +38,7 @@ initial begin
 	Multiplicando = 0;
 	Multiplicador = 0;
 	Reset = 1;
-	Sy = 0;
+	St = 0;
 	
 	
 	# CLK // Reseta
@@ -49,7 +49,7 @@ initial begin
 
 	#CLK;
 
-	Sy = 1; // Start Syncronization
+	St = 1; // Start Syncronization
 	
 	# 10; // clock 1
 

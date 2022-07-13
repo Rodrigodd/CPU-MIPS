@@ -35,11 +35,11 @@ PLL PLL_(
 
 wire sync_mul1, sync_mul;
 
-Register SYNC_MUL1(
+Register #(1) SYNC_MUL1(
 	clk_sys, rst_sys,
 	pll_locked, sync_mul1
 );
-Register SYNC_MUL(
+Register #(1) SYNC_MUL(
 	clk_sys, rst_sys,
 	sync_mul1, sync_mul
 );
