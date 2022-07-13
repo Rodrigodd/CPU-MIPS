@@ -15,8 +15,8 @@ wire [31:0] Produto;
 reg [15:0] Multiplicando, Multiplicador, MultiplicandoReg;
 reg Sy, Clk, Reset;
 
-reg [1:0] state;
-reg [4:0] counter;
+reg [2:0] state;
+reg [5:0] counter;
 reg Load, K;
 
 Multiplicador DUT (
@@ -51,11 +51,11 @@ initial begin
 
 	#CLK;
 
-	Sy = 1; // Start Sincronization
+	Sy = 1; // Start Syncronization
 	
 	# 10; // clock 1
 
-	#(30*CLK); // clk 31
+	#(31*CLK); // clk 32
 	
 	Multiplicando = 12;
 	MultiplicandoReg = 12;
@@ -69,7 +69,7 @@ initial begin
 
 	# 10; // clock 1
 	
-	# (30*CLK) // clock 31, last clock, results done
+	# (31*CLK) // clock 32, last clock, results done
 
 	// load next operants
 	Multiplicando = 16;
@@ -88,7 +88,7 @@ initial begin
 
 	# 10; // clock 1
 
-	# (30*CLK); // clock 31
+	# (31*CLK); // clock 32
 
 	// load next operants
 	Multiplicando = 16'hFFFF;
@@ -107,7 +107,7 @@ initial begin
 
 	# (CLK-10); // clock 1
 
-	# (30*CLK); // clock 31
+	# (31*CLK); // clock 32
 
 	// load next operants
 	Multiplicando = 16'hfa1;
@@ -129,7 +129,7 @@ initial begin
 
 	# (CLK-10); // clock 1
 
-	# (30*CLK); // clock 31
+	# (31*CLK); // clock 32
 
 	# CLK;
 

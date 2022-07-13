@@ -58,7 +58,7 @@ refer to the applicable agreement for further details.
 		(text "Ph (dg)" (rect 106 93 241 197)(font "Arial" ))
 		(text "DC (%)" (rect 140 93 310 197)(font "Arial" ))
 		(text "c0" (rect 62 107 132 225)(font "Arial" ))
-		(text "1/32" (rect 82 107 180 225)(font "Arial" ))
+		(text "1/33" (rect 82 107 180 225)(font "Arial" ))
 		(text "0.00" (rect 112 107 240 225)(font "Arial" ))
 		(text "50.00" (rect 144 107 309 225)(font "Arial" ))
 		(line (pt 0 0)(pt 265 0))

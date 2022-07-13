@@ -29,17 +29,19 @@ module MulControl(
 //       │   ┌───────────────(Sh)◀───────────┐
 //       │   │                               │
 //       │   ▼                               │
-//       └─▶|S0|──▶<K>0────▶<M>0───────────▶|S1|
-//                  1        1               ▲
-//                  ▼        ▼               │
-//                (Load)    (Ad)             │
+//       │  |S0|──▶<K>0────▶<M>0───────────▶|S1|
+//       │          1        1               ▲
+//       │          ▼        ▼               │
+//       └───────▶|Done|    (Ad)             │
+//                  ▼        │               │
+//                (Load)     │               │
 //                  └────────┴───────────────┘
 
 // Declare states
-parameter OutSync = 0, WaitSync = 1, S0 = 2, S1 = 3;
+parameter OutSync = 0, WaitSync = 1, S0 = 2, S1 = 3, Done = 4;
 
 // Declare state register
-reg	[1:0] state;
+reg	[2:0] state;
 
 // Determine the next state synchronously, based on the
 // current state and the input
@@ -47,11 +49,12 @@ always @ (posedge Clk or posedge Reset) begin
 	if (Reset) state = OutSync;
 	else case (state)
 		OutSync: if (Sy) state <= WaitSync;
-		WaitSync: if(K) state <= S0;
+		WaitSync: if(K) state <= Done;
 		S0:
-			state <= S1;
+			state <= K ? Done : S1;
 		S1:
 			state <= S0;
+		Done: state <= S1;
 	endcase
 end
 
@@ -67,12 +70,12 @@ begin
 			OutSync: if (Sy) StSync = 1;
 			WaitSync: ;
 			S0: begin
-				if (K) Load = 1;
-				else if (M) Ad = 1;
+				if (!K && M) Ad = 1;
 			end
 			S1: begin
 				Sh = 1;
 			end
+			Done: Load = 1;
 		endcase
 end
 

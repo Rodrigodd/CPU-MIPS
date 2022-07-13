@@ -1,8 +1,14 @@
 `timescale 1ns/1ps
 module TB();
 
+`define assert(signal, value) \
+        if (signal !== value) begin \
+            $display("ASSERTION FAILED in %m: found %x, expected %x", signal, value); \
+            $stop; \
+        end
+
 parameter T_CLK = 20; // 50 MHz
-parameter T_CLK_SYS = 20*32; // 50/32 MHz
+parameter T_CLK_SYS = T_CLK*32; // 50/32 MHz
 
 reg clk;
 
@@ -12,10 +18,13 @@ wire [31:0] addr;
 wire cs, wr_rd;
 wire [31:0] data_bus_write;
 
-cpu #(
-	.CODE("../../code.txt"),
-	.DATA("../../data.txt")
-) DUT (
+
+cpu
+// #(
+// 	.CODE("../../code.txt"),
+// 	.DATA("../../data.txt")
+// )
+DUT (
 	clk, rst,
 	data_bus_read,
 	addr,
@@ -24,7 +33,7 @@ cpu #(
 );
 
 reg clk_sys, clk_mul, pll_locked, sync_mul;
-reg [31:0] instr, pc, a, b, c, b_mem, c_mem, imm, d_mem, write_back;
+reg [31:0] instr, pc, a, b, c, b_mem, c_mem, imm, d_ex, mul, d_mem, write_back;
 reg [4:0] a_reg, b_reg;
 reg [11:0] ctrl_ex;
 reg [7:0] ctrl_mem;
@@ -58,9 +67,11 @@ initial begin
 	$init_signal_spy("/DUT/a_ex", "a", 1);
 	$init_signal_spy("/DUT/b_ex", "b", 1);
 	$init_signal_spy("/DUT/c_ex", "c", 1);
+	$init_signal_spy("/DUT/d_ex", "d_ex", 1);
 	$init_signal_spy("/DUT/b_mem", "b_mem", 1);
 	$init_signal_spy("/DUT/c_mem", "c_mem", 1);
 	$init_signal_spy("/DUT/imm", "imm", 1);
+	$init_signal_spy("/DUT/mul", "mul", 1);
 	$init_signal_spy("/DUT/d_mem", "d_mem", 1);
 	$init_signal_spy("/DUT/write_back", "write_back", 1);
 	$init_signal_spy("/DUT/ctrl_ex", "ctrl_ex", 1);
@@ -81,7 +92,13 @@ initial begin
 	
 	#(T_CLK/2) // clk 0
 
-	# (T_CLK_SYS * 32)
+	#(T_CLK_SYS*36) // clk 36
+
+	`assert(addr, 16'hdff)
+	`assert(data_bus_write, (32'd2001 * 32'd4001 - (32'd5001 + 32'd3001)))
+	`assert(cs, 0)
+
+	#(T_CLK_SYS * 4)
 	$stop();
 end
 

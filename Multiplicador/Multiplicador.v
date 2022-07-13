@@ -30,7 +30,7 @@ assign Produto = Saidas[2*WIDTH-1:0];
 MulControl c1 (Load, Sh, Ad, StSync, Clk, K, Produto[0], Sy, Reset);
 ACC #(WIDTH) c2 (
 	Saidas,
-	Soma, Multiplicador, Multiplicando,
+	Soma, Multiplicador, MultiplicandoReg,
 	Load, Sh, Ad, Clk, Reset
 );
 Counter #(.COUNT(2*WIDTH - 1)) c3 (K, Load, StSync, Clk, Reset);
