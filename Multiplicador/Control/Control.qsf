@@ -36,13 +36,13 @@
 # -------------------------------------------------------------------------- #
 
 
-set_global_assignment -name FAMILY "MAX 10"
-set_global_assignment -name DEVICE 10M50DAF484C7G
-set_global_assignment -name TOP_LEVEL_ENTITY Control
+set_global_assignment -name FAMILY "Cyclone IV GX"
+set_global_assignment -name DEVICE EP4CGX150DF31C7
+set_global_assignment -name TOP_LEVEL_ENTITY MulControl
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 18.1.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "16:25:14  APRIL 14, 2022"
 set_global_assignment -name LAST_QUARTUS_VERSION "18.1.0 Lite Edition"
-set_global_assignment -name VERILOG_FILE Control.v
+set_global_assignment -name VERILOG_FILE MulControl.v
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
 set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
 set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
@@ -59,6 +59,7 @@ set_global_assignment -name EDA_TEST_BENCH_NAME Control_TB -section_id eda_simul
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id Control_TB
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME Control_TB -section_id Control_TB
 set_global_assignment -name EDA_TEST_BENCH_FILE Control_TB.v -section_id Control_TB
+
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top

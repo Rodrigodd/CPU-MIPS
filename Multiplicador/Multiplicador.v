@@ -12,7 +12,7 @@ module Multiplicador #(
 );
 
 // A descrição dos sinais Load, Sh, Ad, K e St estão em
-// `Multiplicador\Control\Control.v`.
+// `Multiplicador\Control\MulControl.v`.
 
 wire[WIDTH:0] Soma;
 wire[2*WIDTH:0] Saidas;

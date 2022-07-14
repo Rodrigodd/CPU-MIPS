@@ -61,7 +61,7 @@ set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME TB -section_id TB
 set_global_assignment -name EDA_TEST_BENCH_FILE TB.v -section_id TB
 set_global_assignment -name TEXT_FILE data.txt
 set_global_assignment -name VERILOG_FILE Multiplicador/Counter/Counter.v
-set_global_assignment -name VERILOG_FILE Multiplicador/Control/Control.v
+set_global_assignment -name VERILOG_FILE Multiplicador/Control/MulControl.v
 set_global_assignment -name VERILOG_FILE Multiplicador/Adder/Adder.v
 set_global_assignment -name VERILOG_FILE Multiplicador/ACC/ACC.v
 set_global_assignment -name VERILOG_FILE Multiplicador/Multiplicador.v

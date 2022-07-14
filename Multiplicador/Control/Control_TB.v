@@ -2,21 +2,19 @@
 module Control_TB();
 
 reg St, Clk, K, M, Reset;
-wire Idle, Done, Load, Sh, Ad;
+wire Load, Sh, Ad;
 
 reg [1:0]state;
 parameter S0 = 0, S1 = 1, S2 = 2, S3 = 3;
 
 MulControl DUT (
-	.Idle(Idle),
-	.Done(Done),
 	.Load(Load),
 	.Sh(Sh),
 	.Ad(Ad),
-	.St(St),
 	.Clk(Clk),
 	.K(K),
 	.M(M),
+	.St(St),
 	.Reset(Reset)
 );
 
