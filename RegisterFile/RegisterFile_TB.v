@@ -9,6 +9,7 @@ reg [31:0] write_back;
 reg [4:0] a_reg, b_reg;
 wire [31:0] a, b;
 
+integer k=0;
 
 RegisterFile DUT(
 	.clk(clk), .rst(rst),
@@ -24,8 +25,49 @@ RegisterFile DUT(
 initial begin
 	clk = 0;
 	rst = 1;
-	#20
+	write_back_en = 0;
+	write_back_reg = 0;
+	write_back = 0;
+	a_reg = 0;
+	b_reg = 0;
+	
+	//leitura
+	rst = 1;
+	write_back_en = 0;
+	
+	for (k=0; k < 32; k = k + 1) begin
+		#20
+		write_back_reg = write_back_reg + 1;
+		a_reg = a_reg + 1;
+		b_reg = b_reg + 1;
+		
+	end
+	
+	//escrita
 	rst = 0;
+	write_back_en = 1;
+	
+	for (k=0; k < 32; k = k + 1) begin
+		#20
+		write_back_reg = write_back_reg + 1;
+		write_back = write_back + 1;
+		a_reg = a_reg + 1;
+		b_reg = b_reg + 1;
+		
+	end
+	
+	//leitura
+	rst = 1;
+	write_back_en = 0;
+	
+	for (k=0; k < 32; k = k + 1) begin
+		#20
+		write_back_reg = write_back_reg + 1;
+		a_reg = a_reg + 1;
+		b_reg = b_reg + 1;
+		
+	end
+	
 
 	#200
 	$stop();
