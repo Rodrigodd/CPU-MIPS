@@ -45,12 +45,12 @@ feito para que a expressão seja calculada corretamente?
 	Isso por meio do rearranjo do código, ou pela inserção de instruções
 	extras (bubbles).
 
-		            ▼ escreve no RegisterFile (write-first)
-	1 | 2 | 3 | 4 | 5
-	    1 | 2 | 3 | 4 | 5
-	        1 | 2 | 3 | 4 | 5
-	            1 | 2 | 3 | 4 | 5
-				    ▲ le do RegisterFile (write-first)
+                        ▼ escreve no RegisterFile (write-first)
+        1 | 2 | 3 | 4 | 5
+            1 | 2 | 3 | 4 | 5
+                1 | 2 | 3 | 4 | 5
+                    1 | 2 | 3 | 4 | 5
+            		    ▲ le do RegisterFile (write-first)
 
 f) Analisando a sua implementação de dois domínios de clock diferentes, haverá
 problemas com metaestabilidade? Porquê?
