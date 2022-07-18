@@ -42,8 +42,8 @@ Register #(1) SYNC_MUL(
 
 /// Instruction Fetch
 
-wire [31:0] instr;
-wire [31:0] pc_address;
+(*keep=1*) wire [31:0] instr;
+(*keep=1*) wire [31:0] pc_address;
 
 PC PC_(
 	clk_sys, rst_sys,
@@ -52,7 +52,7 @@ PC PC_(
 
 InstructionMemory #(CODE) IM(
 	clk_sys, rst_sys,
-	pc_address,
+	pc_address[9:0],
 	instr
 );
 
@@ -162,11 +162,11 @@ Register #(8) CTRL_MEM(
 
 /// Memory
 
-wire [31:0] c_mem, d_wb, _m_wb, m_wb;
+wire [31:0] d_wb, m_wb;
 wire rd_wr;
 
 wire [6:0] _ctrl_wb;
-(*keep=1*) wire [6:0] ctrl_wb;
+(*keep=1*) wire [7:0] ctrl_wb;
 assign { rd_wr, _ctrl_wb } = ctrl_mem;
 
 assign wr_rd = !rd_wr;
@@ -182,15 +182,9 @@ ADDRDecoding DEC(
 DataMemory #(DATA) MEM(
 	// a memória contém um registro para a saída, logo ela é sincronizada com
 	// a borda de subida do clock, para que ela não fique atrasada de 1 ciclo.
-	~clk_sys, rst_sys,
+	clk_sys, rst_sys,
 	{ !addr[9], addr[8:0] }, data_bus_write,  wr_rd,
-	c_mem
-);
-
-MUX M_WB_SEL(
-	c_mem, data_bus_read,
-	cs,
-	_m_wb
+	m_wb
 );
 
 Register D_WB(
@@ -198,24 +192,26 @@ Register D_WB(
 	d_mem, d_wb
 );
 
-Register M_WB(
-	clk_sys, rst_sys,
-	_m_wb, m_wb
-);
-
 Register #(7) CTRL_WB(
 	clk_sys, rst_sys,
-	_ctrl_wb, ctrl_wb
+	{ cs, _ctrl_wb }, ctrl_wb
 );
 
 /// Write Back
 
-wire wb_sel;
+wire wb_sel, cs_wb;
+wire [31:0] _m_wb;
 
-assign { wb_sel, write_back_en, write_back_reg } = ctrl_wb;
+assign { cs_wb, wb_sel, write_back_en, write_back_reg } = ctrl_wb;
+
+MUX M_WB_SEL(
+	m_wb, data_bus_read,
+	cs_wb,
+	_m_wb
+);
 
 MUX WB_SEL(
-	d_wb, m_wb,
+	d_wb, _m_wb,
 	wb_sel,
 	write_back
 );
