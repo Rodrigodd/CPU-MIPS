@@ -1,3 +1,118 @@
+/*
+a) Qual a latência do sistema?
+
+	O sistema tem uma latência de 5 clocks:
+	- ler a instrução da Memória para o registro INSTR,
+	- decodificar
+	- fazer a operação
+	- ler/escrever na memória de dados
+	- escrever no RegisterFile
+
+b) Qual o throughput do sistema?
+
+	Quando todos os estágios do sistema estão processando instruções, o sistema
+	tem um throughput de 1 instrução por ciclo.
+
+c) Qual a máxima frequência operacional entregue pelo Time Quest Timing
+Analizer para o multiplicador e para o sistema? (Indique a FPGA utilizada)
+
+	FPGA: Cyclone IV GX EP4CGX150DF31C7,
+		         | Slow 85C   | Slow 0C    | Fast 0C
+	Sistema      | 109.66 MHz | 118.67 MHz | 201.01 MHz
+	Multiplicador| 294.20 MHz | 320.82 MHz | 604.96 MHz
+
+d) Qual a máxima frequência de operação do sistema? (Indique a FPGA utilizada)
+
+	Mesmo que o sistema como um todo opere com uma frequência máxima menor que
+	o Multiplicador isolado (segundo o Time Quest), podemos alimentar
+	o sistema com a frequência máxima do Multiplicador, pois o restante do
+	sistema só irá operar com o clk divido por 33 pela PLL. Logo a frequência
+	máxima de operação do sistema será:
+
+	FPGA: Cyclone IV GX EP4CGX150DF31C7,
+		         | Slow 85C   | Slow 0C    | Fast 0C
+	Sistema      | 8.9152 MHz | 9.7218 MHz | 18.332 MHz
+
+e) Com a arquitetura implementada, a expressão (A*B) – (C+D) é executada
+corretamente (se executada em sequência ininterrupta)? Por quê? O que pode ser
+feito para que a expressão seja calculada corretamente?
+
+	Não, pois como as instruções leem do RegisterFile no segundo estágio, mas
+	somente escrevem de volta no quinto, uma instrução acaba lendo do registro
+	antes que o resultado da instrução anterior seja escrita.
+	Para resolver isso, deve-se garantir que cada instrução sempre esteja
+	localizada 3 posições após às instruções a quais dependa do resultado.
+	Isso por meio do rearranjo do código, ou pela inserção de instruções
+	extras (bubbles).
+
+		            ▼ escreve no RegisterFile (write-first)
+	1 | 2 | 3 | 4 | 5
+	    1 | 2 | 3 | 4 | 5
+	        1 | 2 | 3 | 4 | 5
+	            1 | 2 | 3 | 4 | 5
+				    ▲ le do RegisterFile (write-first)
+
+f) Analisando a sua implementação de dois domínios de clock diferentes, haverá
+problemas com metaestabilidade? Porquê?
+
+	Não, pois a leitura e escrita na interface entre os dois domínios de clock
+	só ocorre nos instantes em que ambas as bordas de subida dos clocks do
+	sistema e do multiplicador coincidem, e isso é garantido pelo uso da PLL.
+
+g) A aplicação de um multiplicador do tipo utilizado, no sistema MIPS sugerido,
+é eficiente em termos de velocidade? Porquê?
+
+	Não. Como o sistema não tira vantagem da operação em ciclos do Multiplicador,
+	limitando o período de clock do sistema ao período total de operação do
+	Multiplicador, um Multiplicador implementado em um circuito funcional teria
+	menor latência (embora uma área muito maior), portanto seria mais eficiente,
+	olhando apenas em termos de velocidade.
+
+h) Cite modificações cabíveis na arquitetura do sistema que tornaria o sistema
+mais rápido (frequência de operação maior). Para cada modificação sugerida,
+qual a nova latência e throughput do sistema?
+
+	O principal bottleneck do sistema é o multiplicador. O fato que o sistema
+	espera o Multiplicador completar uma operação completa a cada ciclo de
+	operação do sistema, mesmo que o sistema não esteja multiplicando no momento,
+	faz com que a frequência do sistema caia de 108MHz para apenas 8.9 MHz (para o
+	modelo Slow 0C).
+	
+	Logo, uma modificação seria fazer com que o sistema apenas esperasse pelo
+	multiplicador caso seja necessário fazer uma operação. Isso seria possível
+	a introduzir um sinal de Enable a todos os registros do sistema, que
+	permitiria interromper o sistema assim que o Multiplicador começasse uma
+	operação, permitindo que o sistema e o multiplicador usassem o mesmo
+	clock.
+	Assim, quando não houvesse uma instrução de multiplicação, a latência
+	e o throughput, em números de clock, seria o mesmo, porém com uma
+	frequência cerca de 12 vezes maior (108MHz / 8.9MHz). Quando fosse
+	executada operações de multiplicação, a latência seria praticamente de 37
+	ciclos, com um throughput de 1 instrução a cada 33 ciclos.
+	Portanto, no pior caso o sistema se tornaria quase 3 vezes mais lento (33
+	/ 12), mas seria 12 vezes mais rápido no melhor caso. Isso valeria a pena
+	dependendo de quantas instruções de multiplicação se espera executar.
+
+	Outra possível modificação seria mover o multiplicador para o seu próprio
+	pipeline. As modificações necessárias no sistema seria apenas introduzir
+	um segundo sinal de writeback vindo do multiplicador. Isso permitira
+	executar mais instruções em paralelo, porém instroduziria mais
+	preocupações de pipeline hazzard, como ao tentar executar duas instruções
+	de multiplicação ao mesmo tempo, ou quando o multiplicador e o estágio
+	WriteBack tentam escrever no mesmo registro ao mesmo tempo.
+	No pior caso o throughput seria de 1 instrução a cada 33 ciclos, com uma
+	latência de 35 ciclos. No melhor caso seria um throughput médio de 1.03
+	instruções por ciclo, e uma latência média de 1.03 ciclos por instrução.
+	
+	Mas também é importante notar que nas duas modificações anteriores, ainda
+	é possível fazer com que o Multiplicador opere com 2 ou 3 vezes a
+	frequência do sistema, sem perda de velocidade do sistema. Isso porque
+	o sistema opera com uma frequência máxima de 108 a 201 MHz, enquanto
+	o multiplicador opera de 294 a 605 MHz (vide questão 'c)').
+	Assim, o thoroghput do Multiplicador seria de 1 instrução a cada 16.5
+	ciclos.
+
+*/
 module cpu #(
 	parameter CODE = "code.txt",
 	parameter DATA = "data.txt"
