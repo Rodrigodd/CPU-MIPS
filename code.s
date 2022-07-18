@@ -9,6 +9,8 @@ D: 3001 ; 0bb9
 
 .text
 
+; Com pipeline hazzard
+
 lw r0, A(r31) ; 1. Carrega A em R0
 lw r1, B(r31) ; 2. Carrega B em R1
 lw r2, C(r31) ; 3. Carrega C em R2
@@ -18,26 +20,22 @@ add r5, r3, r4 ; 6. R5 recebe C+D
 sub r6, r4, r5 ; 7. R6 recebe [R4] – [R5]
 sw r6, 0x0dff(r31) ; 8. MemDados [última posição] recebe [R6]
 
+; Com pipeline hazzard
+
 lw r0, A(r31) ; 1. Carrega A em R0
 lw r1, B(r31) ; 2. Carrega B em R1
 lw r2, C(r31) ; 3. Carrega C em R2
 lw r3, D(r31) ; 4. Carrega D em R3
 or r1, r1, r1 ; nop
-sw r1, 0xf0f1(r31) ; debug
 mul r4, r0, r1 ; 5. R4 recebe A*b
 or r1, r1, r1 ; nop
 or r1, r1, r1 ; nop
 or r1, r1, r1 ; nop
-or r1, r1, r1 ; nop
-sw r4, 0xf0f4(r31) ; debug
 add r5, r2, r3 ; 6. R5 recebe C+D
 or r1, r1, r1 ; nop
 or r1, r1, r1 ; nop
 or r1, r1, r1 ; nop
-or r1, r1, r1 ; nop
-sw r5, 0xf0f5(r31) ; debug
 sub r6, r4, r5 ; 7. R6 recebe [R4] – [R5]
-or r1, r1, r1 ; nop
 or r1, r1, r1 ; nop
 or r1, r1, r1 ; nop
 or r1, r1, r1 ; nop

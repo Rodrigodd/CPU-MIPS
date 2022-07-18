@@ -89,15 +89,15 @@ initial begin
 	#T_CLK
 	rst = 0;
 	
-	#(T_CLK/2) // clk 0
+	#(T_CLK_SYS - 50) // clk 1
 
-	#(T_CLK_SYS*36) // clk 36
+	#(T_CLK_SYS*29) // clk 30
 
 	`assert(addr, 16'hdff)
 	`assert(data_bus_write, (32'd2001 * 32'd4001 - (32'd5001 + 32'd3001)))
 	`assert(cs, 0)
 
-	#(T_CLK_SYS * 4)
+	#(T_CLK_SYS * 2)
 	$stop();
 end
 

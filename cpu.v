@@ -41,16 +41,17 @@ feito para que a expressão seja calculada corretamente?
 	somente escrevem de volta no quinto, uma instrução acaba lendo do registro
 	antes que o resultado da instrução anterior seja escrita.
 	Para resolver isso, deve-se garantir que cada instrução sempre esteja
-	localizada 3 posições após às instruções a quais dependa do resultado.
+	localizada 4 posições após às instruções a quais dependa do resultado.
 	Isso por meio do rearranjo do código, ou pela inserção de instruções
 	extras (bubbles).
 
-                        ▼ escreve no RegisterFile (write-first)
-        1 | 2 | 3 | 4 | 5
-            1 | 2 | 3 | 4 | 5
-                1 | 2 | 3 | 4 | 5
-                    1 | 2 | 3 | 4 | 5
-            		    ▲ le do RegisterFile (write-first)
+                        ▼ escreve no RegisterFile (read-first)
+     0. 1 | 2 | 3 | 4 | 5
+     1.     1 | 2 | 3 | 4 | 5
+     2.         1 | 2 | 3 | 4 | 5
+     3.             1 | 2 | 3 | 4 | 5
+     4.                 1 | 2 | 3 | 4 | 5
+            		        ▲ le do RegisterFile (read-first)
 
 f) Analisando a sua implementação de dois domínios de clock diferentes, haverá
 problemas com metaestabilidade? Porquê?
