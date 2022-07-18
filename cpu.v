@@ -117,20 +117,20 @@ module cpu #(
 	parameter CODE = "code.txt",
 	parameter DATA = "data.txt"
 ) (
-	input clk, rst,
-	input [31:0] data_bus_read,
-	output [31:0] addr, 
-	output cs, wr_rd,
-	output [31:0] data_bus_write
+	input CLK, RST,
+	input [31:0] Data_BUS_READ,
+	output [31:0] ADDR, 
+	output CS, WR_RD,
+	output [31:0] Data_BUS_WRITE
 );
 
 (*keep=1*) wire clk_sys, clk_mul, pll_locked, rst_sys;
-assign clk_mul = clk;
-assign rst_sys = rst || !pll_locked; // O sistema permanece resetado enquanto o PLL não estiver "locked".
+assign clk_mul = CLK;
+assign rst_sys = RST || !pll_locked; // O sistema permanece resetado enquanto o PLL não estiver "locked".
 
 PLL PLL_(
-	rst,
-	clk,
+	RST,
+	CLK,
 	clk_sys,
 	pll_locked
 );
@@ -181,7 +181,7 @@ wire [4:0] write_back_reg;
 wire [31:0] _a_ex, _b_ex, _imm;
 (*keep=1*) wire [31:0] a_ex, b_ex, imm;
 
-// { c_sel[1], d_sel[1], op_sel[2], wr_rd[1], wb_sel[1], write_back_en[1], write_back_reg[5] }
+// { c_sel[1], d_sel[1], op_sel[2], rd_wr[1], wb_sel[1], write_back_en[1], write_back_reg[5] }
 wire[11:0] _ctrl_ex;
 (*keep=1*) wire[11:0] ctrl_ex;
 
@@ -284,21 +284,21 @@ wire [6:0] _ctrl_wb;
 (*keep=1*) wire [7:0] ctrl_wb;
 assign { rd_wr, _ctrl_wb } = ctrl_mem;
 
-assign wr_rd = !rd_wr;
+assign WR_RD = !rd_wr;
 
-assign addr = d_mem;
-assign data_bus_write = b_mem;
+assign ADDR = d_mem;
+assign Data_BUS_WRITE = b_mem;
 
 ADDRDecoding DEC(
-	addr,
-	cs
+	ADDR,
+	CS
 );
 
 DataMemory #(DATA) MEM(
 	// a memória contém um registro para a saída, logo ela é sincronizada com
 	// a borda de subida do clock, para que ela não fique atrasada de 1 ciclo.
 	clk_sys, rst_sys,
-	{ !addr[9], addr[8:0] }, data_bus_write,  wr_rd,
+	{ !ADDR[9], ADDR[8:0] }, Data_BUS_WRITE,  WR_RD,
 	m_wb
 );
 
@@ -309,7 +309,7 @@ Register D_WB(
 
 Register #(7) CTRL_WB(
 	clk_sys, rst_sys,
-	{ cs, _ctrl_wb }, ctrl_wb
+	{ CS, _ctrl_wb }, ctrl_wb
 );
 
 /// Write Back
@@ -320,7 +320,7 @@ wire [31:0] _m_wb;
 assign { cs_wb, wb_sel, write_back_en, write_back_reg } = ctrl_wb;
 
 MUX M_WB_SEL(
-	m_wb, data_bus_read,
+	m_wb, Data_BUS_READ,
 	cs_wb,
 	_m_wb
 );
