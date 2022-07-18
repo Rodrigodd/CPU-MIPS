@@ -33,7 +33,7 @@ DUT (
 );
 
 reg clk_sys, clk_mul, pll_locked, sync_mul;
-reg [31:0] instr, pc, a, b, c, b_mem, c_mem, imm, d_ex, mul, d_mem, write_back;
+reg [31:0] instr, pc, a, b, c, b_mem, c_mem, imm, d_ex, d_mem, write_back;
 reg [4:0] a_reg, b_reg;
 reg [11:0] ctrl_ex;
 reg [7:0] ctrl_mem;
@@ -71,7 +71,6 @@ initial begin
 	$init_signal_spy("/DUT/b_mem", "b_mem", 1);
 	$init_signal_spy("/DUT/c_mem", "c_mem", 1);
 	$init_signal_spy("/DUT/imm", "imm", 1);
-	$init_signal_spy("/DUT/mul", "mul", 1);
 	$init_signal_spy("/DUT/d_mem", "d_mem", 1);
 	$init_signal_spy("/DUT/write_back", "write_back", 1);
 	$init_signal_spy("/DUT/ctrl_ex", "ctrl_ex", 1);
@@ -80,7 +79,7 @@ initial begin
 
 	$init_signal_spy("/DUT/MULT/Load", "Load", 1);
 	$init_signal_spy("/DUT/MULT/StSync", "StSync", 1);
-	$init_signal_spy("/DUT/MULT/Produto", "Produto", 1);
+	$init_signal_spy("/DUT/mul", "Produto", 1);
 	$init_signal_spy("/DUT/MULT/c1/state", "mul_state", 1);
 	$init_signal_spy("/DUT/MULT/c3/counter", "counter", 1);
 

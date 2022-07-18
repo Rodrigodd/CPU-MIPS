@@ -27,7 +27,7 @@ module MulControl(
 parameter S0 = 0, S1 = 1, Done = 2;
 
 // Declare state register
-reg	[1:0] state;
+(*keep=1*) reg	[1:0] state;
 
 // Determine the next state synchronously, based on the
 // current state and the input

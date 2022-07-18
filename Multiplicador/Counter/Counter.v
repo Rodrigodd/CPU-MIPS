@@ -5,7 +5,7 @@ module Counter #(
 	input Load, Clk, Reset
 );
 
-reg [4:0] counter;
+(*keep=1*) reg [4:0] counter;
 
 assign K = counter == 0;
 

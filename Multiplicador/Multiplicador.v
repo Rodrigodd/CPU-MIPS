@@ -5,7 +5,7 @@
 module Multiplicador #(
 	parameter WIDTH = 16
 ) (
-	output [2*WIDTH-1:0] Produto,
+	(*keep=1*) output [2*WIDTH-1:0] Produto,
 	input [WIDTH-1:0] Multiplicando, Multiplicador,
 	input St,
 	input Clk, Reset

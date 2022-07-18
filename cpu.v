@@ -9,11 +9,7 @@ module cpu #(
 	output [31:0] data_bus_write
 );
 
-wire clk_sys;
-wire clk_mul;
-wire pll_locked;
-wire rst_sys;
-
+(*keep=1*) wire clk_sys, clk_mul, pll_locked, rst_sys;
 assign clk_mul = clk;
 assign rst_sys = rst || !pll_locked; // O sistema permanece resetado enquanto o PLL não estiver "locked".
 
@@ -64,14 +60,15 @@ InstructionMemory #(CODE) IM(
 
 wire write_back_en;
 wire [4:0] write_back_reg;
-wire [31:0] write_back;
+(*keep=1*) wire [31:0] write_back;
 
-wire [4:0] a_reg, b_reg;
-wire [31:0] _a_ex, a_ex, _b_ex, b_ex;
-wire[31:0] _imm, imm;
+(*keep=1*) wire [4:0] a_reg, b_reg;
+wire [31:0] _a_ex, _b_ex, _imm;
+(*keep=1*) wire [31:0] a_ex, b_ex, imm;
 
 // { c_sel[1], d_sel[1], op_sel[2], wr_rd[1], wb_sel[1], write_back_en[1], write_back_reg[5] }
-wire[11:0] _ctrl_ex, ctrl_ex;
+wire[11:0] _ctrl_ex;
+(*keep=1*) wire[11:0] ctrl_ex;
 
 RegisterFile RF(
 	clk_sys, rst_sys,
@@ -113,16 +110,17 @@ Register IMM(
 
 /// Execute
 
-wire [31:0] mul, op, c_ex, d_ex, d_mem, b_mem;
+(*keep=1*) wire [31:0] mul, op, c_ex, d_ex, d_mem, b_mem;
 
 wire c_sel, d_sel;
 wire [1:0] op_sel;
 
-wire [7:0] _ctrl_mem, ctrl_mem;
+wire [7:0] _ctrl_mem;
+(*keep=1*) wire [7:0] ctrl_mem;
 
 assign { c_sel, d_sel, op_sel, _ctrl_mem } = ctrl_ex;
 
-Multiplicador #(16) MULT(
+(*keep=1*) Multiplicador #(16) MULT(
 	mul,
 	a_ex, b_ex,
 	sync_mul,
@@ -167,8 +165,8 @@ Register #(8) CTRL_MEM(
 wire [31:0] c_mem, d_wb, _m_wb, m_wb;
 wire rd_wr;
 
-wire [6:0] _ctrl_wb, ctrl_wb;
-
+wire [6:0] _ctrl_wb;
+(*keep=1*) wire [6:0] ctrl_wb;
 assign { rd_wr, _ctrl_wb } = ctrl_mem;
 
 assign wr_rd = !rd_wr;
