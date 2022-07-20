@@ -44,6 +44,7 @@ def assemble(path):
             line = line.strip()
             if line == '':
                 continue
+            print(line)
 
             if line[0] == ".":
                 section = line[1:]
