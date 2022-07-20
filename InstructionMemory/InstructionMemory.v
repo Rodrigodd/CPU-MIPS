@@ -1,5 +1,5 @@
 module InstructionMemory #(
-	parameter INITIAL = "../../code.txt",
+	parameter INITIAL = "../code.txt",
 	parameter DATA_WIDTH = 32,
 	parameter ADDR_WIDTH = 10
 ) (
@@ -21,7 +21,7 @@ initial begin
 	$readmemh(INITIAL, rom, 0);
 end
 
-always @ (posedge clk) begin
+always @ (posedge clk or posedge rst) begin
 	data <= rst ? 0 : rom[addr];
 end
 
