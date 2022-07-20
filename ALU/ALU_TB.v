@@ -42,7 +42,7 @@ initial begin
 	c <= 32'h00000001;
 	op <= 1;
 	
-	#200
+	#20
 	$stop();
 end
 

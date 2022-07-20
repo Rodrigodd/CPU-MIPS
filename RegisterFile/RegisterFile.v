@@ -21,7 +21,8 @@ always @(posedge clk or posedge rst) begin
 			registers[i] = 0;
 		end
 	end else begin
-		if (write_back_en) registers[write_back_reg] <= write_back;
+		if (write_back_en)
+			registers[write_back_reg] <= write_back;
 	end
 end
 

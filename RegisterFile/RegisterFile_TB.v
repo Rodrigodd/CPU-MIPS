@@ -30,46 +30,40 @@ initial begin
 	write_back = 0;
 	a_reg = 0;
 	b_reg = 0;
+
+	#11
 	
 	//leitura
-	rst = 1;
+	rst = 0;
 	write_back_en = 0;
 	
 	for (k=0; k < 32; k = k + 1) begin
 		#20
-		write_back_reg = write_back_reg + 1;
 		a_reg = a_reg + 1;
 		b_reg = b_reg + 1;
 		
 	end
 	
 	//escrita
-	rst = 0;
 	write_back_en = 1;
 	
 	for (k=0; k < 32; k = k + 1) begin
 		#20
 		write_back_reg = write_back_reg + 1;
 		write_back = write_back + 1;
-		a_reg = a_reg + 1;
-		b_reg = b_reg + 1;
-		
 	end
 	
 	//leitura
-	rst = 1;
 	write_back_en = 0;
 	
 	for (k=0; k < 32; k = k + 1) begin
 		#20
-		write_back_reg = write_back_reg + 1;
 		a_reg = a_reg + 1;
 		b_reg = b_reg + 1;
-		
 	end
 	
 
-	#200
+	#20
 	$stop();
 end
 

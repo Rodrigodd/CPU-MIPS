@@ -49,7 +49,7 @@ initial begin
 
 	#CLK;
 
-	St = 1; // Start Syncronization
+	St = 1; // Start
 	
 	# 10; // clock 1
 

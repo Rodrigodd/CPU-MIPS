@@ -1,5 +1,5 @@
-module DataMemory #(
-	parameter INITIAL = "../data.txt",
+(*keep=1*) module DataMemory #(
+	parameter INITIAL = "dataTB.txt",
 	parameter DATA_WIDTH = 32,
 	parameter ADDR_WIDTH = 10
 ) (

@@ -1,20 +1,16 @@
 `timescale 1ns/1ps
 module DataMemory_TB();
 
-parameter INITIAL = "../../dataTB.txt";
-parameter DATA_WIDTH = 32;
-parameter ADDR_WIDTH = 10;
-
 reg clk;
 reg rst;
 reg wr_rd;
-reg [ADDR_WIDTH-1:0] addr;
-reg [DATA_WIDTH-1:0] data_in;
-wire [DATA_WIDTH-1:0] data_out;
+reg [9:0] addr;
+reg [31:0] data_in;
+wire [31:0] data_out;
 
 integer k = 0;
 
-DataMemory #(.INITIAL(INITIAL)) DUT(
+DataMemory DUT(
 	.clk(clk), .rst(rst), .wr_rd(wr_rd), .addr(addr),
 	.data_in(data_in), .data_out(data_out)
 );
@@ -59,7 +55,7 @@ initial begin
 		
 	end
 	
-	#200
+	#20
 	$stop();
 end
 

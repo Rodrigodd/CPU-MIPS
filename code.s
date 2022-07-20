@@ -20,7 +20,7 @@ add r5, r3, r4 ; 6. R5 recebe C+D
 sub r6, r4, r5 ; 7. R6 recebe [R4] – [R5]
 sw r6, 0x0dff(r31) ; 8. MemDados [última posição] recebe [R6]
 
-; Com pipeline hazzard
+; Sem pipeline hazzard
 
 lw r0, A(r31) ; 1. Carrega A em R0
 lw r1, B(r31) ; 2. Carrega B em R1

@@ -16,7 +16,7 @@ initial begin
 	#20 instr <= 32'h22222222;
 	#20 instr <= 32'h00009123;
 	
-	#200
+	#20
 	$stop();
 end
 

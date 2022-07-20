@@ -12,8 +12,11 @@ ADDRDecoding DUT(
 );
 
 initial begin
+
+
 	// Testando endereço anterior ao intervalo
-	addr = 32'h09FF;
+	addr = 32'h0;
+	#20 addr = 32'h09FF;
 		
 	// Testando endereços dentro do intervalo
 	#20 addr = 32'h0A00;
@@ -27,8 +30,13 @@ initial begin
 	
 	//Testando enderço posterior ao intervalo
 	#20 addr = 32'h0E00;
+	
+	//Testando bits superiores
+	#20 addr = 32'hFFFF0B00;
+	#20 addr = 32'hFFFF0E00;
+	#20 addr = 32'hFFFFFFFF;
 		
-	#200
+	#20
 	$stop();
 end
 

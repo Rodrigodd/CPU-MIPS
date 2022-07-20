@@ -136,10 +136,6 @@ PLL PLL_(
 	pll_locked
 );
 
-// O sync_mul é usado para sincronizar o periodo de operação do multiplicador
-// com o clk_sys. Mais informações sobre esse sinal estão em
-// Multiplicador/Control/Control.v.
-//
 // A primeira borda de subida de clk_sys ocorre no mesmo instante que o sinal
 // pll_locked é ativo, mas essa borda de subida ocorre fora de fase, de modo
 // que o primeiro periodo de clock do sistema seja menor que os demais. Logo

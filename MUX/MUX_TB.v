@@ -36,7 +36,7 @@ initial begin
 		 
 	#20 sel <= 1;
 
-	#200
+	#20
 $stop();
 end
 

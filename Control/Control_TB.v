@@ -26,6 +26,7 @@ initial begin
 	// add r5, r2, r3
 
 	instr = 32'h0;
+	
 	#20 instr = 32'h0fe00001;
 	#20 instr = 32'hfe10002;
 	#20 instr = 32'h080122b2;
